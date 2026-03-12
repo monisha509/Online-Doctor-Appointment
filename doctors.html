@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Doctors</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+</head>
+
+<body class="jobs-bg">
+
+<nav class="navbar navbar-dark bg-dark">
+
+<div class="container">
+
+<a class="navbar-brand">HealthCare</a>
+
+<a href="index.html" class="btn btn-light">Home</a>
+
+</div>
+
+</nav>
+
+<div class="container mt-4">
+
+<h2 class="text-center text-white">Our Doctors</h2>
+
+<div class="row" id="doctorContainer"></div>
+
+</div>
+
+<script>
+
+let doctors=[
+
+{name:"Dr John Smith",img:"images/doctor1.jpg"},
+{name:"Dr David Wilson",img:"images/doctor2.jpg"},
+{name:"Dr Michael Brown",img:"images/doctor3.jpg"},
+{name:"Dr Robert Miller",img:"images/doctor4.jpg"},
+{name:"Dr James Anderson",img:"images/doctor5.jpg"},
+
+{name:"Dr Emily Clark",img:"images/doctor6.jpg"},
+{name:"Dr Olivia Davis",img:"images/doctor7.jpg"},
+{name:"Dr Sophia Taylor",img:"images/doctor8.jpg"},
+{name:"Dr Ava Martinez",img:"images/doctor9.jpg"},
+{name:"Dr Isabella Thomas",img:"images/doctor10.jpg"},
+{name:"Dr Mia White",img:"images/doctor11.jpg"}
+
+];
+
+let container=document.getElementById("doctorContainer")
+
+for(let i=0;i<doctors.length;i++){
+
+container.innerHTML+=`
+
+<div class="col-md-4">
+
+<div class="card job-card">
+
+<img src="${doctors[i].img}" class="card-img-top">
+
+<div class="card-body text-center">
+
+<h5>${doctors[i].name}</h5>
+
+<a href="appointment.html?doctor=${doctors[i].name}" class="btn btn-primary">
+Book Appointment
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+`
+
+}
+
+</script>
+
+</body>
+</html>
