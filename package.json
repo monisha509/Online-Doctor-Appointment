@@ -1,0 +1,28 @@
+{
+  "name": "doctor-appointment-portal",
+  "version": "2.0.0",
+  "description": "Role-Based Healthcare Appointment & Outpatient Management Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node js/test_real_auth.js",
+    "test:logic": "node js/test_logic.js",
+    "provision": "node js/provision_accounts.js"
+  },
+  "keywords": [
+    "healthcare",
+    "doctor-appointment",
+    "express",
+    "sqlite",
+    "authentication",
+    "role-based-access"
+  ],
+  "author": "HealthCare Clinical Management",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

@@ -210,6 +210,23 @@
       const requiredRole = params.get("role");
       const noticeBox = document.getElementById("urlNoticeBox");
 
+      if (window.location.protocol === "file:") {
+        noticeBox.innerHTML = `
+          <div class="d-flex align-items-start gap-2">
+            <i class="bi bi-exclamation-triangle-fill text-warning fs-5 mt-1"></i>
+            <div>
+              <strong>Local Server Required:</strong> You opened this page directly as a local file (<code>file://</code>). Browser security prohibits API requests from <code>file://</code> URLs.
+              <div class="mt-1">
+                Please launch the backend server using <code>npm start</code> or <code>node server.js</code>, then navigate to <a href="http://localhost:3000/login.html" class="alert-link fw-bold">http://localhost:3000/login.html</a>.
+              </div>
+            </div>
+          </div>
+        `;
+        noticeBox.className = "alert alert-warning small mb-3";
+        noticeBox.classList.remove("d-none");
+        return;
+      }
+
       if (notice === "auth_required") {
         noticeBox.innerHTML = `
           <i class="bi bi-shield-lock me-1"></i>
