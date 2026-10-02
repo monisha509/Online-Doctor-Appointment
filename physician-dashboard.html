@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physician Portal &amp; Schedule | HealthCare Hub</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Clinical Information Bar -->
+  <div class="top-notice-bar">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-hospital text-info"></i>
+        <span class="fw-semibold">HealthCare Consulting Physician Clinic Portal &bull; OPD Outpatient Schedule</span>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-3">
+        <span><i class="bi bi-shield-check me-1"></i> Physician Session Active</span>
+        <span><i class="bi bi-telephone me-1"></i> Clinic Desk: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Sticky Navigation (Physician Role) -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="physician-dashboard.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="brand-pill-badge">PHYSICIAN CLINIC PORTAL</span>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#physicianNavbar" aria-controls="physicianNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="physicianNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="physician-dashboard.html"><i class="bi bi-hospital me-1"></i>Clinic Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#dailyScheduleSection"><i class="bi bi-clock-history me-1"></i>Today's OPD</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#appointmentsListSection"><i class="bi bi-journal-medical me-1"></i>Patient Appointments</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <div class="dropdown d-inline-block">
+              <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-2" style="border: 1.5px solid var(--teal-accent); color: var(--teal-dark); background: #ffffff;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-badge-fill text-teal"></i>
+                <span id="navDocName" class="fw-semibold">Doctor</span>
+                <span class="badge bg-teal-light text-teal border border-teal-subtle">Physician</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><h6 class="dropdown-header">Physician Account</h6></li>
+                <li><span class="dropdown-item-text small text-muted" id="navDocSpecialty">Specialty</span></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="py-4" style="background-color: var(--bg-page);">
+    <div class="container">
+      
+      <!-- PERSONALIZED PHYSICIAN BANNER -->
+      <div class="card p-4 p-md-5 border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #0a192f 0%, #0d9488 100%); color: white;">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <span class="badge bg-white text-teal px-3 py-1 mb-2 fw-bold">
+              <i class="bi bi-award-fill me-1"></i> Consulting Physician Roster
+            </span>
+            <h1 class="fw-bold mb-1 text-white" id="heroDocName">Dr. Physician</h1>
+            <h5 class="text-white-50 mb-3" id="heroDocSpecialty">Specialty &bull; Qualifications</h5>
+            
+            <div class="d-flex flex-wrap gap-3 text-light small">
+              <span><i class="bi bi-geo-alt-fill text-warning me-1"></i> Consulting Suite: <strong id="heroDocRoom">OPD Room</strong></span> &bull;
+              <span><i class="bi bi-clock-fill text-warning me-1"></i> Hours: <span id="heroDocAvailability">Schedule</span></span> &bull;
+              <span><i class="bi bi-cash me-1 text-warning"></i> Fee: <strong>₹<span id="heroDocFee">700</span></strong></span>
+            </div>
+          </div>
+
+          <div class="col-lg-4 text-lg-end">
+            <!-- Demo Quick Doctor Switcher for Evaluators -->
+            <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-25 text-start">
+              <span class="text-white small fw-bold d-block mb-1"><i class="bi bi-arrow-repeat me-1"></i>Demo Profile Switcher</span>
+              <p class="text-white-50" style="font-size: 0.75rem; margin-bottom: 6px;">Test appointment isolation between different physicians:</p>
+              <select id="quickSwitchDocSelect" class="form-select form-select-sm" onchange="switchDemoPhysician(this.value)">
+                <option value="doc-001">Dr. John Smith (Cardiology)</option>
+                <option value="doc-021">Dr. Emily Clark (Dermatology)</option>
+                <option value="doc-011">Dr. Michael Brown (Orthopedics)</option>
+                <option value="doc-016">Dr. James Anderson (Pediatrics)</option>
+                <option value="doc-026">Dr. Robert Miller (Neurology)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRIC CARDS ROW -->
+      <div class="row g-3 mb-5">
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Today's Consultations</span>
+            <h2 class="fw-bold text-primary mb-0" id="docStatToday">0</h2>
+            <span class="badge bg-primary-subtle text-primary mt-2 small">Scheduled for Today</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Upcoming Visits</span>
+            <h2 class="fw-bold text-info mb-0" id="docStatUpcoming">0</h2>
+            <span class="badge bg-info-subtle text-info mt-2 small">Future Bookings</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Completed Consultations</span>
+            <h2 class="fw-bold text-success mb-0" id="docStatCompleted">0</h2>
+            <span class="badge bg-success-subtle text-success mt-2 small">Checked-Out</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Cancellations</span>
+            <h2 class="fw-bold text-danger mb-0" id="docStatCancelled">0</h2>
+            <span class="badge bg-danger-subtle text-danger mt-2 small">Slot Released</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 1: TODAY'S APPOINTMENT SCHEDULE -->
+      <section id="dailyScheduleSection" class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="bi bi-calendar-day text-primary me-2"></i>Today's OPD Schedule (<span id="scheduleTodayDate">Date</span>)</h3>
+            <p class="text-secondary small mb-0">Timeline view of consultations allocated to your clinical room today.</p>
+          </div>
+        </div>
+
+        <div class="card p-4 border-0 rounded-4 shadow-sm bg-white">
+          <div class="row g-3" id="todayScheduleTimeline">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: APPOINTMENT MANAGEMENT TABLE -->
+      <section id="appointmentsListSection" class="mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="bi bi-person-lines-fill text-teal me-2"></i>Assigned Patient Consultations</h3>
+            <p class="text-secondary small mb-0">
+              Strictly filtered to appointments assigned to your doctor ID (<span id="activeDocIdBadge" class="fw-bold text-primary font-monospace">doc-001</span>). Other doctors' records are isolated.
+            </p>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="filter-container mb-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="physicianSearchInput" class="form-control border-start-0" placeholder="Search by patient name or reference ID..." oninput="handlePhysicianSearch(this.value)">
+              </div>
+            </div>
+            
+            <div class="col-md-3">
+              <input type="date" id="physicianDateFilter" class="form-control" onchange="handlePhysicianDateFilter(this.value)" title="Filter by date">
+            </div>
+
+            <div class="col-md-4">
+              <select id="physicianStatusFilter" class="form-select" onchange="handlePhysicianStatusFilter(this.value)">
+                <option value="all">All Consultation Statuses</option>
+                <option value="Scheduled">Scheduled (Active)</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointment Table/Cards Container -->
+        <div id="physicianAppointmentsContainer">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- PATIENT CONSULTATION DETAILS MODAL -->
+  <div class="modal fade" id="patientDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-navy text-white" style="background: #0f2e59; color: white;">
+          <h5 class="modal-title fw-bold text-white"><i class="bi bi-person-vcard me-2"></i>Consultation Patient Record</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4" id="patientDetailsModalBody">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPOINTMENT STATUS UPDATE MODAL -->
+  <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-navy text-white" style="background: #0f2e59; color: white;">
+          <h6 class="modal-title fw-bold text-white"><i class="bi bi-pencil-square me-2"></i>Update Visit Status</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3">
+          <input type="hidden" id="modalTargetBookingId">
+          <label class="form-label small fw-bold text-navy">Consultation Status:</label>
+          <select id="modalNewStatusSelect" class="form-select mb-3">
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveStatusUpdate()">Save Update</button>
+            <button type="button" class="btn btn-light btn-sm border" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-custom">
+    <div class="container text-center text-muted small">
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Consulting Physician Portal</p>
+      <span>Isolated Clinician Roster &bull; Role-Based Outpatient Management</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
+
+  <script>
+    let activePhysicianSession = null;
+    let assignedDocProfile = null;
+    let physicianSearchQuery = "";
+    let physicianDateFilterVal = "";
+    let physicianStatusFilterVal = "all";
+
+    // 1. Session Guard Check
+    document.addEventListener("DOMContentLoaded", function() {
+      activePhysicianSession = enforceRoleGuard("Physician", "login.html");
+      if (!activePhysicianSession) return;
+
+      // Associate with doctor from DOCTORS_DATA
+      assignedDocProfile = findDoctorById(activePhysicianSession.doctorId) || DOCTORS_DATA[0];
+
+      // Populate hero information
+      document.getElementById("heroDocName").textContent = assignedDocProfile.name;
+      document.getElementById("navDocName").textContent = assignedDocProfile.name;
+      document.getElementById("heroDocSpecialty").textContent = `${assignedDocProfile.specialty} &bull; ${assignedDocProfile.qualification}`;
+      document.getElementById("navDocSpecialty").textContent = assignedDocProfile.specialty;
+      document.getElementById("heroDocRoom").textContent = assignedDocProfile.room || "Main OPD Complex";
+      document.getElementById("heroDocAvailability").textContent = assignedDocProfile.availability;
+      document.getElementById("heroDocFee").textContent = assignedDocProfile.fee;
+      document.getElementById("activeDocIdBadge").textContent = assignedDocProfile.id;
+
+      // Set quick-switcher dropdown to active doctor
+      const switcher = document.getElementById("quickSwitchDocSelect");
+      if (switcher) switcher.value = assignedDocProfile.id;
+
+      // Set today's date badge
+      document.getElementById("scheduleTodayDate").textContent = getTodayDateString();
+
+      // Render today's schedule and consultations
+      renderPhysicianDashboard();
+    });
+
+    // Switch demo physician profile for evaluator testing
+    function switchDemoPhysician(docId) {
+      authService.loginDemo("physician", docId);
+      window.location.reload();
+    }
+
+    // 2. Render Dashboard (Metrics, Today's Schedule, Consultations Table)
+    function renderPhysicianDashboard() {
+      if (!assignedDocProfile) return;
+
+      const docId = assignedDocProfile.id;
+      const docAppointments = physicianService.getAssignedAppointments(docId);
+      const todayStr = getTodayDateString();
+
+      // Compute metrics
+      let todayCount = 0;
+      let upcomingCount = 0;
+      let completedCount = 0;
+      let cancelledCount = 0;
+
+      docAppointments.forEach(item => {
+        if (item.appointmentDate === todayStr && item.status !== "Cancelled") {
+          todayCount++;
+        }
+        if (item.appointmentDate >= todayStr && item.status === "Scheduled") {
+          upcomingCount++;
+        }
+        if (item.status === "Completed") {
+          completedCount++;
+        }
+        if (item.status === "Cancelled") {
+          cancelledCount++;
+        }
+      });
+
+      document.getElementById("docStatToday").textContent = todayCount;
+      document.getElementById("docStatUpcoming").textContent = upcomingCount;
+      document.getElementById("docStatCompleted").textContent = completedCount;
+      document.getElementById("docStatCancelled").textContent = cancelledCount;
+
+      renderTodayTimeline(docAppointments, todayStr);
+      renderConsultationsTable(docAppointments);
+    }
+
+    // Render today's timeline
+    function renderTodayTimeline(docAppointments, todayStr) {
+      const container = document.getElementById("todayScheduleTimeline");
+      container.innerHTML = "";
+
+      const todayBookings = docAppointments.filter(item => item.appointmentDate === todayStr);
+
+      STANDARD_TIME_SLOTS.forEach(slot => {
+        const booked = todayBookings.find(b => b.timeSlot === slot && b.status !== "Cancelled");
+        const col = document.createElement("div");
+        col.className = "col-6 col-md-4 col-lg-3";
+
+        if (booked) {
+          col.innerHTML = `
+            <div class="p-3 rounded-3 border border-primary bg-primary-subtle bg-opacity-25 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge bg-primary">${escapeHtml(slot)}</span>
+                <span class="badge bg-light text-navy border">${escapeHtml(booked.status)}</span>
+              </div>
+              <strong class="d-block text-navy text-truncate" title="${escapeHtml(booked.patientName)}">
+                <i class="bi bi-person me-1"></i>${escapeHtml(booked.patientName)}
+              </strong>
+              <span class="small text-muted d-block">${escapeHtml(booked.phone)}</span>
+              <button type="button" class="btn btn-link btn-sm p-0 mt-1 text-primary text-decoration-none" onclick="openPatientDetailsModal('${escapeHtml(booked.id)}')">
+                View Details &rarr;
+              </button>
+            </div>
+          `;
+        } else {
+          col.innerHTML = `
+            <div class="p-3 rounded-3 border bg-light h-100 opacity-75">
+              <span class="badge bg-secondary mb-1">${escapeHtml(slot)}</span>
+              <span class="small text-muted d-block">Slot Open</span>
+              <span class="text-success small fw-semibold"><i class="bi bi-check2"></i> Available</span>
+            </div>
+          `;
+        }
+
+        container.appendChild(col);
+      });
+    }
+
+    // Render appointments table/cards
+    function renderConsultationsTable(docAppointments) {
+      const container = document.getElementById("physicianAppointmentsContainer");
+
+      const filtered = docAppointments.filter(item => {
+        // Status filter
+        if (physicianStatusFilterVal !== "all" && item.status !== physicianStatusFilterVal) return false;
+        // Date filter
+        if (physicianDateFilterVal && item.appointmentDate !== physicianDateFilterVal) return false;
+        // Search query
+        if (physicianSearchQuery) {
+          const q = physicianSearchQuery.toLowerCase();
+          const matchesName = item.patientName && item.patientName.toLowerCase().includes(q);
+          const matchesId = item.id && item.id.toLowerCase().includes(q);
+          const matchesPhone = item.phone && item.phone.toLowerCase().includes(q);
+          if (!matchesName && !matchesId && !matchesPhone) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card p-5 text-center bg-white border rounded-4 shadow-sm">
+            <i class="bi bi-folder-x text-muted fs-1 mb-2"></i>
+            <h5 class="fw-bold text-navy">No Matching Consultations Found</h5>
+            <p class="text-muted small">No patient appointments match the selected search, date, or status filter.</p>
+            <div>
+              <button class="btn btn-outline-primary btn-sm" onclick="resetPhysicianFilters()">Reset Filters</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div class="table-responsive bg-white rounded-4 border shadow-sm">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr class="small text-muted">
+                <th>Reference</th>
+                <th>Patient Details</th>
+                <th>Schedule</th>
+                <th>Reason / Symptoms</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      filtered.reverse().forEach(item => {
+        let badgeClass = "bg-primary";
+        if (item.status === "Completed") badgeClass = "bg-success";
+        if (item.status === "Cancelled") badgeClass = "bg-danger";
+
+        html += `
+          <tr>
+            <td>
+              <span class="fw-bold font-monospace text-primary">${escapeHtml(item.id)}</span>
+            </td>
+            <td>
+              <strong class="d-block text-navy">${escapeHtml(item.patientName)}</strong>
+              <span class="small text-muted">
+                ${item.patientAge ? `${item.patientAge} Yrs, ` : ''}${item.patientGender ? `${item.patientGender} &bull; ` : ''}${escapeHtml(item.phone)}
+              </span>
+            </td>
+            <td>
+              <span class="d-block fw-semibold text-navy"><i class="bi bi-calendar me-1 text-primary"></i>${escapeHtml(item.appointmentDate)}</span>
+              <span class="badge bg-light text-secondary border"><i class="bi bi-clock me-1"></i>${escapeHtml(item.timeSlot)}</span>
+            </td>
+            <td>
+              <span class="small text-secondary text-truncate d-inline-block" style="max-width: 220px;" title="${escapeHtml(item.notes || 'Routine consultation')}">
+                ${escapeHtml(item.notes || 'Routine outpatient visit')}
+              </span>
+            </td>
+            <td>
+              <span class="badge ${badgeClass} px-3 py-2">${escapeHtml(item.status)}</span>
+            </td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-primary" onclick="openPatientDetailsModal('${escapeHtml(item.id)}')">
+                  <i class="bi bi-eye"></i> Details
+                </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="openUpdateStatusModal('${escapeHtml(item.id)}', '${escapeHtml(item.status)}')">
+                  <i class="bi bi-pencil"></i> Status
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    // Handlers
+    function handlePhysicianSearch(val) {
+      physicianSearchQuery = val.trim();
+      renderPhysicianDashboard();
+    }
+
+    function handlePhysicianDateFilter(val) {
+      physicianDateFilterVal = val;
+      renderPhysicianDashboard();
+    }
+
+    function handlePhysicianStatusFilter(val) {
+      physicianStatusFilterVal = val;
+      renderPhysicianDashboard();
+    }
+
+    function resetPhysicianFilters() {
+      physicianSearchQuery = "";
+      physicianDateFilterVal = "";
+      physicianStatusFilterVal = "all";
+      document.getElementById("physicianSearchInput").value = "";
+      document.getElementById("physicianDateFilter").value = "";
+      document.getElementById("physicianStatusFilter").value = "all";
+      renderPhysicianDashboard();
+    }
+
+    // Patient Details Modal
+    function openPatientDetailsModal(bookingId) {
+      const appointments = physicianService.getAssignedAppointments(assignedDocProfile.id);
+      const appt = appointments.find(b => b.id === bookingId);
+      if (!appt) return;
+
+      const body = document.getElementById("patientDetailsModalBody");
+      body.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+          <div>
+            <span class="text-muted small d-block">Booking Reference</span>
+            <span class="fw-bold fs-5 font-monospace text-primary">${escapeHtml(appt.id)}</span>
+          </div>
+          <div>
+            <span class="badge ${appt.status === 'Completed' ? 'bg-success' : (appt.status === 'Cancelled' ? 'bg-danger' : 'bg-primary')} px-3 py-2 fs-6">
+              ${escapeHtml(appt.status)}
+            </span>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <span class="text-muted small d-block">Patient Full Name</span>
+            <strong class="text-navy fs-6">${escapeHtml(appt.patientName)}</strong>
+          </div>
+          <div class="col-6">
+            <span class="text-muted small d-block">Demographics</span>
+            <span>${escapeHtml(String(appt.patientAge || '32'))} Years &bull; ${escapeHtml(appt.patientGender || 'Adult')}</span>
+          </div>
+          <div class="col-6">
+            <span class="text-muted small d-block">Contact Phone</span>
+            <span><i class="bi bi-telephone me-1"></i>${escapeHtml(appt.phone)}</span>
+          </div>
+          <div class="col-6">
+            <span class="text-muted small d-block">Contact Email</span>
+            <span><i class="bi bi-envelope me-1"></i>${escapeHtml(appt.email || 'N/A')}</span>
+          </div>
+          <div class="col-6">
+            <span class="text-muted small d-block">Consultation Date</span>
+            <strong class="text-primary">${escapeHtml(appt.appointmentDate)}</strong>
+          </div>
+          <div class="col-6">
+            <span class="text-muted small d-block">Allocated Slot</span>
+            <strong class="text-navy">${escapeHtml(appt.timeSlot)}</strong>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-3 bg-light border mb-2">
+          <span class="text-muted small d-block mb-1">Reason for Outpatient Visit / Symptoms:</span>
+          <p class="mb-0 text-navy fw-semibold small">
+            ${escapeHtml(appt.notes || 'Routine consultation follow-up requested by patient.')}
+          </p>
+        </div>
+
+        <div class="alert alert-info py-2 small mb-0 mt-3 d-flex gap-2">
+          <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+          <span>Fictional demonstration consultation record. No real electronic health records (EHR) stored.</span>
+        </div>
+      `;
+
+      const modal = new bootstrap.Modal(document.getElementById("patientDetailsModal"));
+      modal.show();
+    }
+
+    // Update Status Modal
+    function openUpdateStatusModal(bookingId, currentStatus) {
+      document.getElementById("modalTargetBookingId").value = bookingId;
+      document.getElementById("modalNewStatusSelect").value = currentStatus;
+      const modal = new bootstrap.Modal(document.getElementById("updateStatusModal"));
+      modal.show();
+    }
+
+    function saveStatusUpdate() {
+      const bookingId = document.getElementById("modalTargetBookingId").value;
+      const newStatus = document.getElementById("modalNewStatusSelect").value;
+
+      physicianService.updateStatus(bookingId, assignedDocProfile.id, newStatus);
+
+      // Hide modal
+      const modalEl = document.getElementById("updateStatusModal");
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+
+      // Re-render
+      renderPhysicianDashboard();
+    }
+  </script>
+</body>
+</html>

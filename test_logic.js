@@ -82,8 +82,8 @@ console.log(`[PASS] Local demo appointments verified: ${seed.length} records ava
 
 // 6. Duplicate slot collision detection
 const testDate = getOffsetDateString(1);
-const isOccupied = isSlotBooked("doc-001", testDate, "10:00 AM");
-console.assert(isOccupied === true, "Expected slot 10:00 AM on testDate to be marked booked");
+const isOccupied = isSlotBooked("doc-001", testDate, "11:15 AM");
+console.assert(isOccupied === true, "Expected slot 11:15 AM on testDate to be marked booked");
 const isFree = isSlotBooked("doc-001", testDate, "02:30 PM");
 console.assert(isFree === false, "Expected slot 02:30 PM on testDate to be free");
 console.log("[PASS] Duplicate booking collision prevention verified.");

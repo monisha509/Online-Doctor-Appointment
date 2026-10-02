@@ -56,12 +56,10 @@
             <a class="nav-link active" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+            <a class="nav-link" href="javascript:void(0)" onclick="handleProtectedNav('doctors.html')"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
-          </li>
-          <li class="nav-item ms-lg-2">
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically via syncPortalNavbar -->
             <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
               <i class="bi bi-person-lock"></i>
               <span>Portal Login</span>
@@ -80,22 +78,22 @@
           <div class="col-lg-7">
             <div class="hero-badge">
               <i class="bi bi-check-circle-fill text-teal"></i>
-              <span>Seamless Outpatient Consultation Scheduling</span>
+              <span>Role-Based Healthcare Appointment &amp; Consultation Portal</span>
             </div>
             <h1 class="hero-title">
               Quality Healthcare, <span>Accessible &amp; Fast</span> for Every Patient
             </h1>
             <p class="hero-desc">
-              Schedule appointments with verified specialist physicians, select convenient time slots, and manage your consultations in seconds. Built for high reliability and patient peace of mind.
+              Dedicated portals for Patients and Consulting Physicians. Schedule appointments with verified specialist physicians, select convenient time slots, and manage consultations securely.
             </p>
             <div class="d-flex flex-wrap gap-3 mb-4">
-              <a href="doctors.html" class="btn-primary-custom">
+              <button type="button" class="btn-primary-custom" onclick="handleProtectedNav('doctors.html')">
                 <i class="bi bi-calendar-check-fill"></i>
                 <span>Choose Doctor &amp; Book</span>
-              </a>
-              <a href="doctors.html" class="btn-outline-custom">
-                <i class="bi bi-people-fill"></i>
-                <span>Explore Doctors (55 Specialists)</span>
+              </button>
+              <a href="login.html" class="btn-outline-custom">
+                <i class="bi bi-person-lock"></i>
+                <span>Enter Portal Login / Demo</span>
               </a>
             </div>
             
@@ -137,8 +135,8 @@
                 </div>
                 <div class="col-6">
                   <div class="p-3 rounded bg-light border">
-                    <h3 class="fw-bold text-navy mb-1">100%</h3>
-                    <span class="text-muted small">Digital Scheduling</span>
+                    <h3 class="fw-bold text-navy mb-1">2</h3>
+                    <span class="text-muted small">Active User Roles</span>
                   </div>
                 </div>
                 <div class="col-6">
@@ -151,7 +149,7 @@
 
               <div class="alert alert-light border small text-muted mb-0 d-flex gap-2 align-items-start">
                 <i class="bi bi-info-circle-fill text-primary mt-1"></i>
-                <span>Doctor selection is required before reserving a time slot. Choose your clinician from the <a href="doctors.html" class="fw-bold text-primary">Doctor Directory</a>.</span>
+                <span>Role-based access active: Sign in as a <strong>Patient</strong> to book, or as a <strong>Consulting Physician</strong> to manage your schedule.</span>
               </div>
             </div>
           </div>
@@ -159,8 +157,63 @@
       </div>
     </section>
 
-    <!-- KEY HEALTHCARE SERVICES -->
+    <!-- ROLE HIGHLIGHTS SECTION -->
     <section class="py-5" style="background-color: var(--bg-surface);">
+      <div class="container py-4">
+        <div class="section-header">
+          <span class="section-tag">Role-Based System</span>
+          <h2 class="section-title">Two Dedicated Portals</h2>
+          <p class="text-secondary mt-2">Tailored workflows designed for patients and consulting clinical faculty.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+          <!-- Patient Portal Card -->
+          <div class="col-md-6 col-lg-5">
+            <div class="card p-4 p-md-5 border rounded-4 shadow-sm h-100 bg-white">
+              <div class="service-icon-box mb-3">
+                <i class="bi bi-person-heart"></i>
+              </div>
+              <h3 class="fw-bold text-navy mb-2">Patient Portal</h3>
+              <p class="text-muted small mb-4">
+                Designed for individuals seeking outpatient care. Browse 55 verified specialist profiles, select appointment slots in real time, avoid waiting rooms, and view digital confirmation slips.
+              </p>
+              <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-4">
+                <li><i class="bi bi-check2 text-success me-2"></i> Browse &amp; filter 55 doctors across 11 departments</li>
+                <li><i class="bi bi-check2 text-success me-2"></i> Pre-validated slot booking with collision prevention</li>
+                <li><i class="bi bi-check2 text-success me-2"></i> Personalized patient dashboard &amp; visit history</li>
+              </ul>
+              <a href="login.html?role=Patient" class="btn btn-outline-primary fw-bold mt-auto py-2">
+                Enter Patient Portal &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Consulting Physician Card -->
+          <div class="col-md-6 col-lg-5">
+            <div class="card p-4 p-md-5 border rounded-4 shadow-sm h-100 bg-white">
+              <div class="service-icon-box mb-3" style="background:#ccfbf1; color:#0d9488;">
+                <i class="bi bi-hospital"></i>
+              </div>
+              <h3 class="fw-bold text-navy mb-2">Physician Portal</h3>
+              <p class="text-muted small mb-4">
+                Tailored for consulting physicians to review daily OPD timelines, access patient consultation details, update visit statuses (Scheduled, Completed, Cancelled), and maintain isolated records.
+              </p>
+              <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-4">
+                <li><i class="bi bi-check2 text-success me-2"></i> Daily time-slot schedule &amp; patient queue</li>
+                <li><i class="bi bi-check2 text-success me-2"></i> Strictly isolated appointments by doctor ID</li>
+                <li><i class="bi bi-check2 text-success me-2"></i> Real-time status updates (Completed, Cancelled)</li>
+              </ul>
+              <a href="login.html?role=Physician" class="btn btn-outline-teal fw-bold mt-auto py-2" style="border: 1.5px solid var(--teal-accent); color: var(--teal-dark);">
+                Enter Physician Portal &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY HEALTHCARE DEPARTMENTS -->
+    <section class="py-5" style="background-color: var(--bg-page);">
       <div class="container py-4">
         <div class="section-header">
           <span class="section-tag">Clinical Departments</span>
@@ -178,9 +231,9 @@
               <p class="text-muted small mb-4">Coronary interventions, ECG &amp; echocardiography, preventive cardiology, and hypertension therapy.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=Cardiology" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=Cardiology')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -194,9 +247,9 @@
               <p class="text-muted small mb-4">Expert primary care, seasonal illnesses, metabolic management, diabetes guidance, and routine health checkups.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=General Medicine" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=General Medicine')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -210,9 +263,9 @@
               <p class="text-muted small mb-4">Compassionate child healthcare, neonatology, immunizations, developmental milestones, and pediatric pulmonary care.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=Pediatrics" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=Pediatrics')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -226,9 +279,9 @@
               <p class="text-muted small mb-4">Joint replacement, arthroscopy, spine rehab, fracture management, and sports medicine injury recovery.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=Orthopedics" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=Orthopedics')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -242,9 +295,9 @@
               <p class="text-muted small mb-4">Scientific skin care, acne therapy, dermoscopy, allergy patch testing, trichology, and dermatologic surgery.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=Dermatology" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=Dermatology')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -258,66 +311,12 @@
               <p class="text-muted small mb-4">Diagnosis and clinical care for chronic headache, epilepsy, movement disorders, peripheral neuropathy, and stroke recovery.</p>
               <div class="d-flex justify-content-between align-items-center mt-auto">
                 <span class="badge bg-primary-subtle text-primary">5 Specialists</span>
-                <a href="doctors.html?filter=Neurology" class="text-primary fw-bold small text-decoration-none">
+                <button type="button" class="btn btn-link p-0 text-primary fw-bold small text-decoration-none" onclick="handleProtectedNav('doctors.html?filter=Neurology')">
                   View Doctors <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="text-center mt-4">
-          <a href="doctors.html" class="btn btn-outline-primary px-4 py-2">
-            <i class="bi bi-grid-3x3-gap me-1"></i> View All 11 Medical Departments (55 Doctors)
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4-STEP BOOKING WORKFLOW -->
-    <section class="py-5" style="background-color: var(--bg-page);">
-      <div class="container py-4">
-        <div class="section-header">
-          <span class="section-tag">Patient Booking Flow</span>
-          <h2 class="section-title">Schedule in 4 Structured Steps</h2>
-          <p class="text-secondary mt-2">Doctor selection is mandatory before booking to guarantee clinical availability.</p>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-md-3">
-            <div class="step-card">
-              <div class="step-number">1</div>
-              <h5 class="fw-bold mb-2">Browse &amp; Filter</h5>
-              <p class="text-muted small">Search by doctor name or filter by department across 55 specialist profiles.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="step-card">
-              <div class="step-number" style="background:var(--primary-blue);">2</div>
-              <h5 class="fw-bold mb-2">Select Doctor</h5>
-              <p class="text-muted small">Choose your preferred doctor to view fee, experience, schedule, and consulting suite.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="step-card">
-              <div class="step-number" style="background:var(--teal-accent);">3</div>
-              <h5 class="fw-bold mb-2">Pick Slot &amp; Details</h5>
-              <p class="text-muted small">Pick an available consultation date and unreserved time slot without double-booking.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="step-card">
-              <div class="step-number" style="background:var(--success);">4</div>
-              <h5 class="fw-bold mb-2">Digital Slip</h5>
-              <p class="text-muted small">Receive an instant digital confirmation slip with a unique reference code.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center mt-5">
-          <a href="doctors.html" class="btn-primary-custom">
-            <i class="bi bi-search me-1"></i> Find a Doctor to Begin Booking
-          </a>
         </div>
       </div>
     </section>
@@ -375,8 +374,8 @@
                   <span class="fw-bold text-warning">24 / 7 Active</span>
                 </div>
               </div>
-              <a href="doctors.html" class="btn btn-light fw-bold py-2 px-3 text-primary">
-                <i class="bi bi-person-check me-1"></i> Choose Your Doctor Now
+              <a href="login.html" class="btn btn-light fw-bold py-2 px-3 text-primary">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to HealthCare Portal
               </a>
             </div>
           </div>
@@ -397,29 +396,29 @@
             <span class="fw-bold fs-5 text-white">HealthCare Portal</span>
           </div>
           <p class="small text-secondary mb-3">
-            A comprehensive outpatient appointment and doctor directory platform. Designed for accessible healthcare navigation.
+            Role-based healthcare appointment and clinic management portal. Designed for accessible healthcare navigation.
           </p>
           <span class="small text-muted">&bull; 55 Doctors across 11 Medical Departments</span>
         </div>
 
         <div class="col-6 col-lg-2">
-          <h5>Quick Links</h5>
+          <h5>Portals</h5>
           <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li><a href="login.html?role=Patient">Patient Portal</a></li>
+            <li><a href="login.html?role=Physician">Physician Portal</a></li>
             <li><a href="home.html">Home</a></li>
-            <li><a href="doctors.html">Doctor Directory</a></li>
-            <li><a href="javascript:void(0)" onclick="openMyAppointmentsModal()">My Bookings</a></li>
-            <li><a href="login.html">Portal Login</a></li>
+            <li><a href="login.html">Sign In / Switch</a></li>
           </ul>
         </div>
 
         <div class="col-6 col-lg-3">
           <h5>Specialties</h5>
           <ul class="list-unstyled d-flex flex-column gap-2 small">
-            <li><a href="doctors.html?filter=Cardiology">Cardiology (5)</a></li>
-            <li><a href="doctors.html?filter=General Medicine">General Medicine (5)</a></li>
-            <li><a href="doctors.html?filter=Orthopedics">Orthopedics (5)</a></li>
-            <li><a href="doctors.html?filter=Pediatrics">Pediatrics (5)</a></li>
-            <li><a href="doctors.html?filter=Dermatology">Dermatology (5)</a></li>
+            <li><a href="javascript:void(0)" onclick="handleProtectedNav('doctors.html?filter=Cardiology')">Cardiology</a></li>
+            <li><a href="javascript:void(0)" onclick="handleProtectedNav('doctors.html?filter=General Medicine')">General Medicine</a></li>
+            <li><a href="javascript:void(0)" onclick="handleProtectedNav('doctors.html?filter=Orthopedics')">Orthopedics</a></li>
+            <li><a href="javascript:void(0)" onclick="handleProtectedNav('doctors.html?filter=Pediatrics')">Pediatrics</a></li>
+            <li><a href="javascript:void(0)" onclick="handleProtectedNav('doctors.html?filter=Dermatology')">Dermatology</a></li>
           </ul>
         </div>
 
@@ -435,7 +434,7 @@
       <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
         <p class="mb-0 text-muted small">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
         <div class="d-flex gap-3 small text-muted">
-          <span>55 Doctors &bull; 11 Departments &bull; Zero Double Booking</span>
+          <span>Patient &amp; Physician Portals &bull; REST API Ready</span>
         </div>
       </div>
     </div>
@@ -446,5 +445,20 @@
   
   <!-- Master Application Logic -->
   <script src="js/script.js"></script>
+
+  <script>
+    function handleProtectedNav(targetUrl) {
+      const session = getActiveSession();
+      if (!session) {
+        window.location.href = `login.html?notice=auth_required&role=Patient`;
+        return;
+      }
+      if (session.role === "Physician") {
+        window.location.href = "physician-dashboard.html?notice=role_redirect";
+        return;
+      }
+      window.location.href = targetUrl;
+    }
+  </script>
 </body>
 </html>

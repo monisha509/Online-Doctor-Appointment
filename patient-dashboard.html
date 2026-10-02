@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Portal &amp; Dashboard | HealthCare Portal</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Clinical Information Bar -->
+  <div class="top-notice-bar">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-person-heart text-info"></i>
+        <span class="fw-semibold">HealthCare Patient Portal &bull; Outpatient Consultation Services</span>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-3">
+        <span><i class="bi bi-clock me-1"></i> OPD Hours: Mon - Sat 8:00 AM - 8:00 PM</span>
+        <span><i class="bi bi-telephone me-1"></i> Central Desk: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Sticky Navigation (Patient Role) -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="patient-dashboard.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="brand-pill-badge">PATIENT PORTAL</span>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#patientNavbar" aria-controls="patientNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="patientNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="patient-dashboard.html"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Browse Doctors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#myAppointmentsSection"><i class="bi bi-calendar-check me-1"></i>My Appointments</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <div class="dropdown d-inline-block">
+              <button class="btn btn-sm btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle text-teal"></i>
+                <span id="navPatientName" class="fw-semibold">Patient</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Patient</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><h6 class="dropdown-header">Patient Account</h6></li>
+                <li><span class="dropdown-item-text small text-muted" id="navPatientEmail">patient@healthcare.demo</span></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="py-4" style="background-color: var(--bg-page);">
+    <div class="container">
+      
+      <!-- PERSONALIZED WELCOME BANNER -->
+      <div class="card p-4 p-md-5 border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #0f2e59 0%, #0369a1 100%); color: white;">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <span class="badge bg-teal-accent text-white px-3 py-1 mb-2" style="background-color: var(--teal-accent);">
+              <i class="bi bi-person-check-fill me-1"></i> Verified Patient Session
+            </span>
+            <h1 class="fw-bold mb-2 text-white">Welcome back, <span id="heroPatientName">Patient</span>!</h1>
+            <p class="text-white-50 mb-3" style="max-width: 600px;">
+              Manage your upcoming specialist consultations, review past clinical visits, and schedule appointments with 55 verified physicians across 11 departments.
+            </p>
+            <div class="d-flex flex-wrap gap-2 text-light small">
+              <span><i class="bi bi-card-text me-1 text-teal"></i> ID: <strong id="heroPatientId">pat-101</strong></span> &bull;
+              <span><i class="bi bi-envelope me-1 text-teal"></i> <span id="heroPatientEmail">email</span></span> &bull;
+              <span><i class="bi bi-telephone me-1 text-teal"></i> <span id="heroPatientPhone">phone</span></span>
+            </div>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <a href="#browseDoctorsSection" class="btn btn-light fw-bold py-3 px-4 text-primary shadow">
+              <i class="bi bi-calendar-plus me-1"></i> Book a Consultation
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRIC CARDS ROW -->
+      <div class="row g-3 mb-5">
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Upcoming Visits</span>
+            <h2 class="fw-bold text-primary mb-0" id="statUpcoming">0</h2>
+            <span class="badge bg-primary-subtle text-primary mt-2 small">Scheduled Slots</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Completed Consultations</span>
+            <h2 class="fw-bold text-success mb-0" id="statCompleted">0</h2>
+            <span class="badge bg-success-subtle text-success mt-2 small">Past Records</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Cancelled Visits</span>
+            <h2 class="fw-bold text-danger mb-0" id="statCancelled">0</h2>
+            <span class="badge bg-danger-subtle text-danger mt-2 small">Revoked Slots</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="p-3 p-md-4 rounded-4 bg-white border shadow-sm">
+            <span class="text-muted small d-block mb-1">Available Specialists</span>
+            <h2 class="fw-bold text-navy mb-0">55</h2>
+            <span class="badge bg-info-subtle text-info mt-2 small">11 Departments</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY APPOINTMENTS SECTION -->
+      <section id="myAppointmentsSection" class="mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="bi bi-calendar2-check text-primary me-2"></i>My Consultations</h3>
+            <p class="text-secondary small mb-0">View scheduled, completed, and cancelled consultations for your profile.</p>
+          </div>
+          <!-- Filter Buttons for Status -->
+          <div class="btn-group btn-group-sm mt-2 mt-md-0" role="group">
+            <button type="button" class="btn btn-outline-primary active" onclick="filterAppointments('all', this)">All</button>
+            <button type="button" class="btn btn-outline-primary" onclick="filterAppointments('Scheduled', this)">Upcoming</button>
+            <button type="button" class="btn btn-outline-primary" onclick="filterAppointments('Completed', this)">Completed</button>
+            <button type="button" class="btn btn-outline-primary" onclick="filterAppointments('Cancelled', this)">Cancelled</button>
+          </div>
+        </div>
+
+        <div id="patientAppointmentsContainer">
+          <!-- Rendered dynamically via JavaScript -->
+        </div>
+      </section>
+
+      <!-- BROWSE & BOOK DOCTOR SECTION (Embedded Directory) -->
+      <section id="browseDoctorsSection" class="pt-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="bi bi-people text-teal me-2"></i>Find &amp; Book Specialist Physicians</h3>
+            <p class="text-secondary small mb-0">Browse through 55 doctors. Select your physician to schedule a consultation.</p>
+          </div>
+          <span id="patientDocCountBadge" class="badge bg-primary px-3 py-2 fs-6">55 Specialists Available</span>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="filter-container mb-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-7">
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="patientDoctorSearch" class="form-control border-start-0" placeholder="Search doctor by name, qualification, or department..." oninput="handleDoctorSearch(this.value)">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <select id="patientDeptSelect" class="form-select" onchange="handleDeptSelect(this.value)">
+                <option value="all">All Clinical Departments (11)</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Obstetrics & Gynecology">Obstetrics &amp; Gynecology</option>
+                <option value="ENT Specialist">ENT Specialist</option>
+                <option value="Ophthalmology">Ophthalmology</option>
+                <option value="Dental Surgery">Dental Surgery</option>
+                <option value="Psychiatry">Psychiatry</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doctor Cards Grid (1 on Mobile, 2 on Tablet, 3 on Desktop) -->
+        <div class="row g-4" id="patientDoctorCardsGrid">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="patientNoDoctorsState" class="text-center py-5 d-none">
+          <div class="p-4 bg-white rounded-4 shadow-sm d-inline-block" style="max-width: 450px;">
+            <i class="bi bi-search text-muted fs-1 mb-2 d-block"></i>
+            <h5 class="fw-bold text-navy">No Matching Doctors</h5>
+            <p class="text-muted small">No specialists matched your current search filters.</p>
+            <button class="btn btn-outline-primary btn-sm" onclick="resetPatientDocSearch()">Reset Search</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- DOCTOR PROFILE MODAL -->
+  <div class="modal fade" id="patientDoctorProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-navy text-white" style="background: #0f2e59; color: white;">
+          <h5 class="modal-title fw-bold text-white"><i class="bi bi-person-vcard me-2"></i>Doctor Profile</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-center" id="patientDoctorModalBody">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer bg-light d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="#" id="patientModalBookBtn" class="btn btn-primary fw-bold">
+            <i class="bi bi-calendar-check me-1"></i> Proceed to Book
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-custom">
+    <div class="container text-center text-muted small">
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Patient Portal Dashboard</p>
+      <span>Demonstration Environment &bull; Local Storage Session</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
+
+  <script>
+    let activePatientSession = null;
+    let appointmentFilter = "all";
+    let docFilterDept = "all";
+    let docSearchQuery = "";
+
+    // 1. Session Guard Check
+    document.addEventListener("DOMContentLoaded", function() {
+      activePatientSession = enforceRoleGuard("Patient", "login.html");
+      if (!activePatientSession) return;
+
+      // Populate personalized welcome banner
+      document.getElementById("heroPatientName").textContent = activePatientSession.name;
+      document.getElementById("navPatientName").textContent = activePatientSession.name;
+      document.getElementById("heroPatientId").textContent = activePatientSession.patientId || "pat-101";
+      document.getElementById("heroPatientEmail").textContent = activePatientSession.email || "patient@healthcare.demo";
+      document.getElementById("navPatientEmail").textContent = activePatientSession.email || "patient@healthcare.demo";
+      document.getElementById("heroPatientPhone").textContent = activePatientSession.phone || "+91 98401 99999";
+
+      // Render appointments & doctors
+      renderPatientAppointments();
+      renderDoctorsGrid();
+    });
+
+    // 2. Render My Appointments
+    function renderPatientAppointments() {
+      const container = document.getElementById("patientAppointmentsContainer");
+      const patientId = activePatientSession ? activePatientSession.patientId : null;
+      const allList = patientService.getAppointments(patientId);
+
+      // Compute stats
+      let upcomingCount = 0;
+      let completedCount = 0;
+      let cancelledCount = 0;
+
+      allList.forEach(item => {
+        if (item.status === "Scheduled") upcomingCount++;
+        else if (item.status === "Completed") completedCount++;
+        else if (item.status === "Cancelled") cancelledCount++;
+      });
+
+      document.getElementById("statUpcoming").textContent = upcomingCount;
+      document.getElementById("statCompleted").textContent = completedCount;
+      document.getElementById("statCancelled").textContent = cancelledCount;
+
+      // Filter by active tab
+      const filtered = allList.filter(item => {
+        if (appointmentFilter === "all") return true;
+        return item.status === appointmentFilter;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card p-5 text-center bg-white border rounded-4 shadow-sm">
+            <i class="bi bi-calendar-x text-muted fs-1 mb-2"></i>
+            <h5 class="fw-bold text-navy">No ${appointmentFilter === 'all' ? '' : appointmentFilter} Consultations</h5>
+            <p class="text-muted small">You do not have any appointments under this status.</p>
+            <div>
+              <a href="#browseDoctorsSection" class="btn btn-primary btn-sm">Find a Specialist</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      filtered.reverse().forEach(item => {
+        const isCancelled = item.status === "Cancelled";
+        const isCompleted = item.status === "Completed";
+        const isScheduled = item.status === "Scheduled";
+
+        let badgeClass = "bg-primary";
+        if (isCompleted) badgeClass = "bg-success";
+        if (isCancelled) badgeClass = "bg-danger";
+
+        html += `
+          <div class="card p-3 p-md-4 mb-3 border rounded-4 shadow-sm ${isCancelled ? 'bg-light opacity-75' : 'bg-white'}">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge ${badgeClass} px-3 py-1">${escapeHtml(item.status)}</span>
+                  <span class="fw-bold font-monospace text-primary">${escapeHtml(item.id)}</span>
+                  <span class="text-muted small">&bull; ${escapeHtml(item.appointmentDate)} at ${escapeHtml(item.timeSlot)}</span>
+                </div>
+
+                <h5 class="fw-bold text-navy mb-1">${escapeHtml(item.doctorName)}</h5>
+                <div class="text-teal small fw-semibold mb-2">
+                  <i class="bi bi-award me-1"></i>${escapeHtml(item.specialty)} &bull; 
+                  <span class="text-muted"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(item.room || 'Main OPD Complex')}</span>
+                </div>
+
+                <div class="text-secondary small">
+                  <span>Fee: <strong>₹${escapeHtml(String(item.fee || '500'))}</strong></span> &bull; 
+                  <span>Patient: <strong>${escapeHtml(item.patientName)}</strong> (${escapeHtml(item.phone)})</span>
+                </div>
+
+                ${item.notes ? `<div class="mt-2 text-muted small fst-italic"><i class="bi bi-chat-quote me-1"></i>"${escapeHtml(item.notes)}"</div>` : ''}
+              </div>
+
+              <div class="d-flex flex-md-column gap-2 text-end">
+                <a href="success.html?bookingId=${encodeURIComponent(item.id)}" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-receipt me-1"></i>View Slip
+                </a>
+                ${isScheduled ? `
+                  <button type="button" class="btn btn-outline-danger btn-sm" onclick="cancelPatientAppointment('${escapeHtml(item.id)}')">
+                    <i class="bi bi-x-circle me-1"></i>Cancel Visit
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function filterAppointments(status, btn) {
+      appointmentFilter = status;
+      document.querySelectorAll('#myAppointmentsSection .btn-group button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPatientAppointments();
+    }
+
+    function cancelPatientAppointment(bookingId) {
+      if (!confirm(`Are you sure you want to cancel appointment ${bookingId}? The reserved slot will be freed.`)) return;
+      patientService.cancelBooking(bookingId);
+      renderPatientAppointments();
+    }
+
+    // 3. Render Doctors Grid
+    function renderDoctorsGrid() {
+      const container = document.getElementById("patientDoctorCardsGrid");
+      const emptyState = document.getElementById("patientNoDoctorsState");
+      const countBadge = document.getElementById("patientDocCountBadge");
+
+      const filtered = DOCTORS_DATA.filter(doc => {
+        const matchesCategory = (docFilterDept === "all") || 
+          doc.specialty.toLowerCase() === docFilterDept.toLowerCase() ||
+          doc.specialty.toLowerCase().includes(docFilterDept.toLowerCase());
+        
+        const q = docSearchQuery.toLowerCase();
+        const matchesSearch = !q || 
+          doc.name.toLowerCase().includes(q) ||
+          doc.specialty.toLowerCase().includes(q) ||
+          doc.qualification.toLowerCase().includes(q);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      countBadge.textContent = `Showing ${filtered.length} of ${DOCTORS_DATA.length} Specialists`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = "";
+        emptyState.classList.remove("d-none");
+        return;
+      }
+
+      emptyState.classList.add("d-none");
+
+      let html = "";
+      filtered.forEach(doc => {
+        html += `
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="doctor-card">
+              <div class="doctor-image-wrapper">
+                <img src="${escapeHtml(doc.img)}" alt="${escapeHtml(doc.name)}" onerror="handleImageError(this)" loading="lazy">
+                <span class="badge-specialty">${escapeHtml(doc.specialty)}</span>
+                <span class="badge-availability">OPD Active</span>
+              </div>
+              <div class="doctor-card-body">
+                <h5 class="doctor-card-title">${escapeHtml(doc.name)}</h5>
+                <div class="doctor-specialty-text">${escapeHtml(doc.qualification)}</div>
+
+                <div class="doctor-meta-grid">
+                  <div class="doctor-meta-item">
+                    <span class="doctor-meta-label">Experience</span>
+                    <span class="doctor-meta-value">${escapeHtml(doc.experience)}</span>
+                  </div>
+                  <div class="doctor-meta-item">
+                    <span class="doctor-meta-label">Consultation Fee</span>
+                    <span class="doctor-meta-value text-primary">₹${escapeHtml(String(doc.fee))}</span>
+                  </div>
+                </div>
+
+                <div class="text-muted small mb-3">
+                  <div class="d-flex align-items-center gap-1 mb-1">
+                    <i class="bi bi-clock me-1 text-teal"></i>
+                    <span>${escapeHtml(doc.availability)}</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-1">
+                    <i class="bi bi-geo-alt me-1 text-primary"></i>
+                    <span>${escapeHtml(doc.room || 'Main OPD Block')}</span>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-auto">
+                  <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1" onclick="openPatientDoctorModal('${escapeHtml(doc.id)}')">
+                    <i class="bi bi-info-circle me-1"></i>Profile
+                  </button>
+                  <a href="appointment.html?doctorId=${encodeURIComponent(doc.id)}" class="btn btn-primary btn-sm flex-grow-1 fw-semibold d-flex align-items-center justify-content-center gap-1">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span>Book</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function handleDoctorSearch(val) {
+      docSearchQuery = val.trim();
+      renderDoctorsGrid();
+    }
+
+    function handleDeptSelect(val) {
+      docFilterDept = val;
+      renderDoctorsGrid();
+    }
+
+    function resetPatientDocSearch() {
+      docSearchQuery = "";
+      docFilterDept = "all";
+      document.getElementById("patientDoctorSearch").value = "";
+      document.getElementById("patientDeptSelect").value = "all";
+      renderDoctorsGrid();
+    }
+
+    function openPatientDoctorModal(doctorId) {
+      const doc = findDoctorById(doctorId);
+      if (!doc) return;
+
+      const body = document.getElementById("patientDoctorModalBody");
+      body.innerHTML = `
+        <img src="${escapeHtml(doc.img)}" alt="${escapeHtml(doc.name)}" onerror="handleImageError(this)" class="rounded-circle border mb-3 shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+        <h4 class="fw-bold text-navy mb-1">${escapeHtml(doc.name)}</h4>
+        <span class="badge bg-teal-light text-teal px-3 py-1 mb-2">${escapeHtml(doc.specialty)}</span>
+        <div class="text-muted small mb-3">${escapeHtml(doc.qualification)} &bull; ${escapeHtml(doc.experience)} Experience</div>
+        
+        <p class="text-secondary small text-start px-3 py-2 rounded bg-light border">${escapeHtml(doc.bio)}</p>
+
+        <div class="row g-2 text-start small mt-2">
+          <div class="col-6">
+            <span class="text-muted d-block">Consultation Fee</span>
+            <strong class="text-primary fs-6">₹${escapeHtml(String(doc.fee))}</strong>
+          </div>
+          <div class="col-6">
+            <span class="text-muted d-block">Consulting Suite</span>
+            <strong>${escapeHtml(doc.room || 'OPD Block')}</strong>
+          </div>
+          <div class="col-12 mt-2">
+            <span class="text-muted d-block">Schedule</span>
+            <strong>${escapeHtml(doc.availability)}</strong>
+          </div>
+          <div class="col-12 mt-1">
+            <span class="text-muted d-block">Languages</span>
+            <span>${escapeHtml(doc.languages || 'English')}</span>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("patientModalBookBtn").href = `appointment.html?doctorId=${encodeURIComponent(doc.id)}`;
+      const modal = new bootstrap.Modal(document.getElementById("patientDoctorProfileModal"));
+      modal.show();
+    }
+  </script>
+</body>
+</html>

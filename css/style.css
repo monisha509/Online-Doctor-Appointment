@@ -821,7 +821,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Responsive adjustments */
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
   .hero-title {
     font-size: 2.3rem;
   }
@@ -830,6 +830,12 @@ h1, h2, h3, h4, h5, h6 {
   }
   .voucher-details-grid {
     grid-template-columns: 1fr;
+  }
+  .portal-welcome-card {
+    padding: 24px 20px;
+  }
+  .stat-card-portal {
+    margin-bottom: 12px;
   }
 }
 
@@ -845,5 +851,13 @@ h1, h2, h3, h4, h5, h6 {
   }
   .booking-card-header {
     padding: 18px 20px;
+  }
+  .appointment-list-item {
+    flex-direction: column !important;
+  }
+  .appointment-list-item .d-flex.gap-2 {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
   }
 }

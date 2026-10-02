@@ -1,11 +1,15 @@
 /**
  * HEALTHCARE APPOINTMENT SYSTEM - CENTRAL APPLICATION LOGIC
- * Central doctor registry (55 doctors across 11 clinical departments),
- * client-side appointment persistence, slot validation, and modal support.
- * Demonstration data - not real medical credentials or diagnoses.
+ * - 55-doctor registry across 11 clinical departments
+ * - Two-role architecture: Patient and Consulting Physician (OPD Admin completely removed)
+ * - Session handling and client-side demo preview mode
+ * - Isolated appointment queries by doctorId (physicians only see their own appointments)
+ * - Backend-ready service modules with documented placeholder REST endpoints
  */
 
-// 1. COMPREHENSIVE DOCTOR REGISTRY (5 Doctors per each of the 1 support departments = 55 Doctors)
+// ============================================================================
+// 1. COMPREHENSIVE DOCTOR REGISTRY (5 Doctors x 11 Departments = 55 Doctors)
+// ============================================================================
 const DOCTORS_DATA = [
   // --- CARDIOLOGY (5 Doctors) ---
   {
@@ -19,6 +23,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_001.jpg",
     room: "Cardiology Wing - Room 101",
     languages: "English, Hindi",
+    email: "dr.johnsmith@healthcare.demo",
     bio: "Consultant interventional cardiologist specializing in coronary interventions, preventive cardiovascular screening, and hypertension management."
   },
   {
@@ -32,6 +37,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_002.jpg",
     room: "Cardiology Wing - Room 102",
     languages: "English, Bengali, Hindi",
+    email: "dr.ananyasen@healthcare.demo",
     bio: "Cardiovascular specialist focused on non-invasive echocardiography, heart failure therapy, and lipid management."
   },
   {
@@ -45,6 +51,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_003.jpg",
     room: "Cardiology Wing - Room 103",
     languages: "English, Hindi, Punjabi",
+    email: "dr.vikrammalhotra@healthcare.demo",
     bio: "Senior clinical cardiologist managing valvular heart conditions, adult congenital heart diseases, and post-angioplasty care."
   },
   {
@@ -58,6 +65,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_004.jpg",
     room: "Cardiology Wing - Room 104",
     languages: "English, French",
+    email: "dr.rebeccafoster@healthcare.demo",
     bio: "Cardiac electrophysiology specialist treating arrhythmias, palpitations, syncope evaluations, and pacemaker programming."
   },
   {
@@ -71,6 +79,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_005.jpg",
     room: "Cardiology Wing - Room 105",
     languages: "English, Tamil, Telugu",
+    email: "dr.arunprakash@healthcare.demo",
     bio: "Specialist in preventive cardiovascular disease, lifestyle cardiology, exercise stress testing, and vascular health."
   },
 
@@ -86,6 +95,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_006.jpg",
     room: "OPD Complex A - Room 201",
     languages: "English, Spanish",
+    email: "dr.davidwilson@healthcare.demo",
     bio: "Primary care physician managing chronic medical disorders, seasonal viral illnesses, metabolic syndrome, and routine wellness checkups."
   },
   {
@@ -99,6 +109,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_007.jpg",
     room: "OPD Complex A - Room 202",
     languages: "English, Tamil, Malayalam",
+    email: "dr.shalinisundaram@healthcare.demo",
     bio: "Family physician offering thorough clinical evaluations for fever, respiratory infections, hypertension, and preventive health screenings."
   },
   {
@@ -112,6 +123,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_008.jpg",
     room: "OPD Complex A - Room 203",
     languages: "English, Gujarati, Hindi",
+    email: "dr.kevinpatel@healthcare.demo",
     bio: "Senior physician specializing in infectious diseases, adult immunizations, geriatric medicine, and complex diagnostic workups."
   },
   {
@@ -125,6 +137,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_009.jpg",
     room: "OPD Complex A - Room 204",
     languages: "English, Portuguese",
+    email: "dr.mariasantos@healthcare.demo",
     bio: "Dedicated internist focusing on thyroid disorders, metabolic health, nutritional deficiencies, and outpatient medical therapy."
   },
   {
@@ -138,6 +151,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_010.jpg",
     room: "OPD Complex A - Room 205",
     languages: "English, Bengali, Hindi",
+    email: "dr.rajeshmukherjee@healthcare.demo",
     bio: "Veteran consultant physician providing multi-system illness management, critical illness follow-up, and preventive geriatric care."
   },
 
@@ -153,6 +167,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_011.jpg",
     room: "Orthopedic Pavilion - Room 301",
     languages: "English, German",
+    email: "dr.michaelbrown@healthcare.demo",
     bio: "Orthopedic surgeon specializing in joint reconstruction, arthroscopic knee repairs, sports ligament tears, and post-traumatic injury rehab."
   },
   {
@@ -166,6 +181,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_012.jpg",
     room: "Orthopedic Pavilion - Room 302",
     languages: "English, Hindi",
+    email: "dr.sandeepverma@healthcare.demo",
     bio: "Subspecialist in primary and revision hip & knee arthroplasty, osteoarthritis management, and advanced joint preservation techniques."
   },
   {
@@ -179,6 +195,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_013.jpg",
     room: "Orthopedic Pavilion - Room 303",
     languages: "English, Danish",
+    email: "dr.clarajensen@healthcare.demo",
     bio: "Spine and musculoskeletal consultant addressing cervical disc disease, lumbar sciatica, posture rehabilitation, and spinal ergonomics."
   },
   {
@@ -192,6 +209,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_014.jpg",
     room: "Orthopedic Pavilion - Room 304",
     languages: "English, Tamil, Telugu",
+    email: "dr.harishbalaji@healthcare.demo",
     bio: "Sports injury clinician handling shoulder impingement, rotator cuff injuries, tennis elbow, ankle sprains, and conservative trauma therapy."
   },
   {
@@ -205,6 +223,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_015.jpg",
     room: "Orthopedic Pavilion - Room 305",
     languages: "English",
+    email: "dr.anthonyvance@healthcare.demo",
     bio: "Specialist managing limb deformities, developmental dysplasia of the hip, clubfoot corrections, and fractures in growing bones."
   },
 
@@ -220,6 +239,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_016.jpg",
     room: "Child Health Center - Room 401",
     languages: "English",
+    email: "dr.jamesanderson@healthcare.demo",
     bio: "Child healthcare physician overseeing newborn wellness examinations, immunization programs, nutritional counseling, and childhood infections."
   },
   {
@@ -233,6 +253,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_017.jpg",
     room: "Child Health Center - Room 402",
     languages: "English, Tamil, Malayalam",
+    email: "dr.meerakrishnan@healthcare.demo",
     bio: "Neonatal and infant health specialist managing preterm baby follow-up care, infantile colic, early milestones, and pediatric respiratory allergy."
   },
   {
@@ -246,6 +267,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_018.jpg",
     room: "Child Health Center - Room 403",
     languages: "English, Portuguese",
+    email: "dr.lucassilva@healthcare.demo",
     bio: "Developmental pediatrician assessing speech delays, childhood attention disorders, behavioral milestones, and growth curve monitoring."
   },
   {
@@ -259,6 +281,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_019.jpg",
     room: "Child Health Center - Room 404",
     languages: "English, Marathi, Hindi",
+    email: "dr.radhikajoshi@healthcare.demo",
     bio: "Pediatric pulmonology consultant specializing in childhood asthma, recurrent bronchitis, cystic fibrosis, and pediatric allergic rhinitis."
   },
   {
@@ -272,6 +295,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_020.jpg",
     room: "Child Health Center - Room 405",
     languages: "English",
+    email: "dr.timothycampbell@healthcare.demo",
     bio: "Adolescent and school-age clinician focusing on pubertal growth, pediatric obesity, adolescent lifestyle guidance, and acute infectious illnesses."
   },
 
@@ -287,6 +311,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_021.jpg",
     room: "Skin & Laser Suite - Room 501",
     languages: "English",
+    email: "dr.emilyclark@healthcare.demo",
     bio: "Clinical dermatologist experienced in acne vulgaris treatments, atopic eczema, psoriasis protocols, and clinical dermoscopy evaluations."
   },
   {
@@ -300,6 +325,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_022.jpg",
     room: "Skin & Laser Suite - Room 502",
     languages: "English, Malayalam, Hindi",
+    email: "dr.poojanair@healthcare.demo",
     bio: "Consultant dermatologist focused on hyperpigmentation, chemical peels, photo-aging reversal, scar revision, and hair loss therapies."
   },
   {
@@ -313,6 +339,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_023.jpg",
     room: "Skin & Laser Suite - Room 503",
     languages: "English, Korean",
+    email: "dr.danielkim@healthcare.demo",
     bio: "Trichology and scalp disorders specialist addressing alopecia areata, androgenetic hair thinning, scalp psoriasis, and nail pathologies."
   },
   {
@@ -326,6 +353,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_024.jpg",
     room: "Skin & Laser Suite - Room 504",
     languages: "English, Marathi, Kannada",
+    email: "dr.snehakulkarni@healthcare.demo",
     bio: "Specialist managing pediatric skin rashes, vascular birthmarks, viral warts, urticaria, and contact dermatitis patch testing."
   },
   {
@@ -339,6 +367,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_025.jpg",
     room: "Skin & Laser Suite - Room 505",
     languages: "English",
+    email: "dr.arthurwright@healthcare.demo",
     bio: "Dermatologic surgeon skilled in mole removal, cyst excisions, vitiligo surgical grafting, and non-melanoma skin cancer screenings."
   },
 
@@ -354,6 +383,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_026.jpg",
     room: "Neuroscience Wing - Room 601",
     languages: "English",
+    email: "dr.robertmiller@healthcare.demo",
     bio: "Senior consultant neurologist treating chronic headache syndromes, peripheral neuropathies, myasthenia gravis, and neuro-rehabilitation."
   },
   {
@@ -367,6 +397,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_027.jpg",
     room: "Neuroscience Wing - Room 602",
     languages: "English, Tamil, Telugu",
+    email: "dr.swativenkat@healthcare.demo",
     bio: "Stroke and vascular neurology consultant focused on post-stroke recovery, transient ischemic attack (TIA) workups, and carotid screening."
   },
   {
@@ -380,6 +411,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_028.jpg",
     room: "Neuroscience Wing - Room 603",
     languages: "English",
+    email: "dr.nathanbrooks@healthcare.demo",
     bio: "Clinical neurophysiologist specialized in video-EEG interpretation, seizure disorders, refractory epilepsy management, and sleep studies."
   },
   {
@@ -393,6 +425,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_029.jpg",
     room: "Neuroscience Wing - Room 604",
     languages: "English, Tamil, Kannada",
+    email: "dr.aravindramaswamy@healthcare.demo",
     bio: "Movement disorder specialist diagnosing Parkinson's disease, essential tremors, dystonias, and deep brain stimulation (DBS) follow-up."
   },
   {
@@ -406,6 +439,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_030.jpg",
     room: "Neuroscience Wing - Room 605",
     languages: "English",
+    email: "dr.hannahscott@healthcare.demo",
     bio: "Headache specialist managing intractable migraines, cluster headaches, cranial neuralgias, and botulinum toxin therapy for migraine."
   },
 
@@ -421,6 +455,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_031.jpg",
     room: "Women's Health Pavilion - Room 701",
     languages: "English",
+    email: "dr.oliviadavis@healthcare.demo",
     bio: "Obstetrician & gynecologist providing comprehensive prenatal care, maternal health guidance, hormonal imbalance care, and wellness screening."
   },
   {
@@ -434,6 +469,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_032.jpg",
     room: "Women's Health Pavilion - Room 702",
     languages: "English, Marathi, Hindi",
+    email: "dr.kavitadeshmukh@healthcare.demo",
     bio: "High-risk pregnancy consultant managing gestational diabetes, pre-eclampsia, multiple gestations, and complex obstetric history."
   },
   {
@@ -447,6 +483,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_033.jpg",
     room: "Women's Health Pavilion - Room 703",
     languages: "English, Irish",
+    email: "dr.fionagallagher@healthcare.demo",
     bio: "Minimally invasive surgeon addressing uterine fibroids, ovarian cysts, endometriosis protocols, and hysteroscopic interventions."
   },
   {
@@ -460,6 +497,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_034.jpg",
     room: "Women's Health Pavilion - Room 704",
     languages: "English, Tamil, Hindi",
+    email: "dr.deepasundar@healthcare.demo",
     bio: "Reproductive specialist guiding couples through PCOS management, fertility evaluations, ovulation induction, and recurrent loss investigations."
   },
   {
@@ -473,6 +511,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_035.jpg",
     room: "Women's Health Pavilion - Room 705",
     languages: "English, Spanish",
+    email: "dr.gracemorales@healthcare.demo",
     bio: "Compassionate gynecologist counseling on menstrual irregularities in teens, contraceptive planning, cervical cancer screening, and menopause care."
   },
 
@@ -488,6 +527,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_036.jpg",
     room: "ENT & Audiology Wing - Room 801",
     languages: "English",
+    email: "dr.sophiataylor@healthcare.demo",
     bio: "Otolaryngologist providing clinical care for sinusitis, hearing disorders, chronic tonsillitis, ear infections, and vertigo assessment."
   },
   {
@@ -501,6 +541,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_037.jpg",
     room: "ENT & Audiology Wing - Room 802",
     languages: "English, Hindi, Punjabi",
+    email: "dr.manojchawla@healthcare.demo",
     bio: "Rhinology expert managing nasal polyps, deviated nasal septum (DNS), chronic rhinosinusitis, and skull base endoscopic procedures."
   },
   {
@@ -514,6 +555,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_038.jpg",
     room: "ENT & Audiology Wing - Room 803",
     languages: "English",
+    email: "dr.liamgallagher@healthcare.demo",
     bio: "Ear specialist managing conductive and sensorineural hearing loss, tympanic membrane perforations, mastoid disease, and tinnitus therapies."
   },
   {
@@ -527,6 +569,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_039.jpg",
     room: "ENT & Audiology Wing - Room 804",
     languages: "English, Tamil, Hindi",
+    email: "dr.gayathrimohan@healthcare.demo",
     bio: "Voice and swallowing specialist evaluating vocal cord nodules, professional voice strain, hoarseness, and dysphagia."
   },
   {
@@ -540,6 +583,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_040.jpg",
     room: "ENT & Audiology Wing - Room 805",
     languages: "English, Spanish",
+    email: "dr.carlosmendez@healthcare.demo",
     bio: "Sleep surgery specialist conducting sleep endoscopy, obstructive sleep apnea evaluation, snoring corrections, and adenoid hypertrophy care."
   },
 
@@ -555,6 +599,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_041.jpg",
     room: "Eye Center - Room 901",
     languages: "English, Spanish",
+    email: "dr.avamartinez@healthcare.demo",
     bio: "Comprehensive eye care consultant focusing on cataract micro-surgery assessment, refractive errors, dry eye disease, and ocular allergy."
   },
   {
@@ -568,6 +613,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_042.jpg",
     room: "Eye Center - Room 902",
     languages: "English, Tamil, Hindi",
+    email: "dr.karthiksubramanian@healthcare.demo",
     bio: "Retinal specialist treating diabetic retinopathy, retinal vascular occlusions, macular degeneration, and retinal laser interventions."
   },
   {
@@ -581,6 +627,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_043.jpg",
     room: "Eye Center - Room 903",
     languages: "English",
+    email: "dr.emmawatson@healthcare.demo",
     bio: "Corneal specialist diagnosing keratoconus, corneal dystrophies, ocular surface infections, and refractive laser eligibility screening."
   },
   {
@@ -594,6 +641,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_044.jpg",
     room: "Eye Center - Room 904",
     languages: "English, Kannada, Hindi",
+    email: "dr.vandanahegde@healthcare.demo",
     bio: "Glaucoma specialist focused on early visual field testing, optical coherence tomography (OCT), intraocular pressure control, and laser trabeculoplasty."
   },
   {
@@ -607,6 +655,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_045.jpg",
     room: "Eye Center - Room 905",
     languages: "English",
+    email: "dr.brianoconnor@healthcare.demo",
     bio: "Pediatric ophthalmologist managing amblyopia (lazy eye), pediatric refraction, squint evaluation, and congenital lacrimal duct obstruction."
   },
 
@@ -622,6 +671,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_046.jpg",
     room: "Dental Clinic Suite - Room 1001",
     languages: "English",
+    email: "dr.isabellathomas@healthcare.demo",
     bio: "Dental surgeon offering root canal treatments, impacted wisdom tooth extractions, minor maxillofacial trauma, and aesthetic smile designs."
   },
   {
@@ -635,6 +685,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_047.jpg",
     room: "Dental Clinic Suite - Room 1002",
     languages: "English, Hindi",
+    email: "dr.niteshbansal@healthcare.demo",
     bio: "Orthodontist specializing in clear aligner therapy, metal and ceramic self-ligating braces, malocclusion corrections, and retainers."
   },
   {
@@ -648,6 +699,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_048.jpg",
     room: "Dental Clinic Suite - Room 1003",
     languages: "English",
+    email: "dr.charlotteking@healthcare.demo",
     bio: "Endodontic specialist performing single-visit microscopic root canals, composite restorations, tooth re-treatments, and dental emergencies."
   },
   {
@@ -661,6 +713,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_049.jpg",
     room: "Dental Clinic Suite - Room 1004",
     languages: "English, Tamil, Hindi",
+    email: "dr.preetiraghavan@healthcare.demo",
     bio: "Periodontist and dental implantologist handling gum surgeries, laser gingivectomy, bone grafting, and routine scaling & polishing."
   },
   {
@@ -674,6 +727,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_050.jpg",
     room: "Dental Clinic Suite - Room 1005",
     languages: "English",
+    email: "dr.simonbennett@healthcare.demo",
     bio: "Child dental specialist emphasizing preventative dental sealants, painless cavity restorations, habit-breaking appliances, and fluoride therapy."
   },
 
@@ -689,6 +743,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_051.jpg",
     room: "Behavioral Health Wing - Room 1101",
     languages: "English",
+    email: "dr.miawhite@healthcare.demo",
     bio: "Consultant psychiatrist dedicated to adult behavioral health, work stress relief, generalized anxiety management, and depressive disorders."
   },
   {
@@ -702,6 +757,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_052.jpg",
     room: "Behavioral Health Wing - Room 1102",
     languages: "English, Hindi",
+    email: "dr.anandvardhan@healthcare.demo",
     bio: "Senior psychiatrist providing pharmacotherapy and holistic care for bipolar mood disorders, obsessive-compulsive disorder, and insomnia."
   },
   {
@@ -715,6 +771,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_053.jpg",
     room: "Behavioral Health Wing - Room 1103",
     languages: "English",
+    email: "dr.rachelgreenburg@healthcare.demo",
     bio: "Psychiatrist combining medical therapy with cognitive behavioral counseling for panic disorder, phobias, and trauma-related stress."
   },
   {
@@ -728,6 +785,7 @@ const DOCTORS_DATA = [
     img: "images/doctor_054.jpg",
     room: "Behavioral Health Wing - Room 1104",
     languages: "English, Bengali, Hindi",
+    email: "dr.sunitasim@healthcare.demo",
     bio: "Geriatric psychiatrist focusing on cognitive decline, dementia-related mood changes, late-life depression, and caregiver counseling."
   },
   {
@@ -741,11 +799,14 @@ const DOCTORS_DATA = [
     img: "images/doctor_055.jpg",
     room: "Behavioral Health Wing - Room 1105",
     languages: "English",
+    email: "dr.ethanross@healthcare.demo",
     bio: "Adolescent mental health consultant addressing academic anxiety, attention deficit hyperactivity disorder (ADHD), and emotional resilience."
   }
 ];
 
+// ============================================================================
 // 2. STANDARD TIME SLOTS
+// ============================================================================
 const STANDARD_TIME_SLOTS = [
   "09:00 AM",
   "10:00 AM",
@@ -758,44 +819,147 @@ const STANDARD_TIME_SLOTS = [
   "06:30 PM"
 ];
 
-// 3. STORAGE KEYS
+// ============================================================================
+// 3. STORAGE KEYS & DEMO ACCOUNTS (NO PASSWORDS STORED)
+// ============================================================================
 const STORAGE_KEY_APPOINTMENTS = "healthcare_appointments_demo";
+const STORAGE_KEY_SESSION = "healthcare_active_session_demo";
 
-// 4. STORAGE ACCESS & INITIALIZATION
+// Fictional Prototype Accounts for Demonstration
+const DEMO_PREVIEW_ACCOUNTS = {
+  patient: {
+    role: "Patient",
+    patientId: "pat-101",
+    name: "Ananya Raman",
+    email: "ananya.raman@healthcare.demo",
+    phone: "+91 98401 99999",
+    age: 32,
+    gender: "Female"
+  },
+  physician: {
+    role: "Physician",
+    doctorId: "doc-001",
+    name: "Dr. John Smith",
+    specialty: "Cardiology",
+    qualification: "MBBS, MD, DM (Cardiology)",
+    email: "dr.johnsmith@healthcare.demo",
+    phone: "+91 98400 11001",
+    room: "Cardiology Wing - Room 101"
+  },
+  physicianSecondary: {
+    role: "Physician",
+    doctorId: "doc-021",
+    name: "Dr. Emily Clark",
+    specialty: "Dermatology",
+    qualification: "MBBS, MD (DVL)",
+    email: "dr.emilyclark@healthcare.demo",
+    phone: "+91 98400 11021",
+    room: "Skin & Laser Suite - Room 501"
+  }
+};
+
+// ============================================================================
+// 4. STORAGE ACCESS & INITIAL DATA SEEDING
+// ============================================================================
 function getAppointments() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_APPOINTMENTS);
     if (!raw) {
-      // Seed with initial fictional demonstration bookings
+      // Seed with realistic fictional outpatient appointments
       const initialBookings = [
         {
           id: "HC-2026-1042",
-          patientName: "Rahul Sharma",
-          email: "rahul.sample@healthcare.local",
-          phone: "+91 98401 23456",
+          patientId: "pat-101",
+          patientName: "Ananya Raman",
+          email: "ananya.raman@healthcare.demo",
+          phone: "+91 98401 99999",
+          patientAge: 32,
+          patientGender: "Female",
           doctorId: "doc-001",
           doctorName: "Dr. John Smith",
           specialty: "Cardiology",
-          appointmentDate: getOffsetDateString(1),
+          appointmentDate: getTodayDateString(),
           timeSlot: "10:00 AM",
-          status: "Confirmed",
+          status: "Scheduled",
           fee: 700,
-          notes: "Routine quarterly cardiovascular review.",
+          room: "Cardiology Wing - Room 101",
+          notes: "Routine quarterly cardiovascular review and BP check.",
           createdAt: new Date().toISOString()
         },
         {
           id: "HC-2026-1043",
-          patientName: "Priya Venkatesh",
-          email: "priya.sample@healthcare.local",
-          phone: "+91 98402 34567",
+          patientId: "pat-102",
+          patientName: "Karthik Verma",
+          email: "karthik.demo@healthcare.local",
+          phone: "+91 98403 88888",
+          patientAge: 48,
+          patientGender: "Male",
+          doctorId: "doc-001",
+          doctorName: "Dr. John Smith",
+          specialty: "Cardiology",
+          appointmentDate: getOffsetDateString(1),
+          timeSlot: "11:15 AM",
+          status: "Scheduled",
+          fee: 700,
+          room: "Cardiology Wing - Room 101",
+          notes: "Hypertension assessment and medication review.",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: "HC-2026-1044",
+          patientId: "pat-103",
+          patientName: "Suresh Menon",
+          email: "suresh.demo@healthcare.local",
+          phone: "+91 98404 77777",
+          patientAge: 56,
+          patientGender: "Male",
+          doctorId: "doc-001",
+          doctorName: "Dr. John Smith",
+          specialty: "Cardiology",
+          appointmentDate: getOffsetDateString(-2),
+          timeSlot: "09:00 AM",
+          status: "Completed",
+          fee: 700,
+          room: "Cardiology Wing - Room 101",
+          notes: "Lipid profile consultation. Completed normally.",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: "HC-2026-1045",
+          patientId: "pat-101",
+          patientName: "Ananya Raman",
+          email: "ananya.raman@healthcare.demo",
+          phone: "+91 98401 99999",
+          patientAge: 32,
+          patientGender: "Female",
           doctorId: "doc-021",
           doctorName: "Dr. Emily Clark",
           specialty: "Dermatology",
           appointmentDate: getOffsetDateString(2),
-          timeSlot: "11:15 AM",
-          status: "Confirmed",
+          timeSlot: "02:30 PM",
+          status: "Scheduled",
           fee: 600,
-          notes: "Follow up consultation for skin allergy.",
+          room: "Skin & Laser Suite - Room 501",
+          notes: "Follow up consultation for seasonal skin allergy.",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: "HC-2026-1046",
+          patientId: "pat-104",
+          patientName: "Vikram Das",
+          email: "vikram.demo@healthcare.local",
+          phone: "+91 98405 66666",
+          patientAge: 41,
+          patientGender: "Male",
+          doctorId: "doc-011",
+          doctorName: "Dr. Michael Brown",
+          specialty: "Orthopedics",
+          appointmentDate: getOffsetDateString(-1),
+          timeSlot: "10:00 AM",
+          status: "Cancelled",
+          fee: 650,
+          room: "Orthopedic Pavilion - Room 301",
+          notes: "Patient cancelled due to unexpected travel.",
           createdAt: new Date().toISOString()
         }
       ];
@@ -817,7 +981,275 @@ function saveAppointments(appointments) {
   }
 }
 
-// 5. HELPER UTILITIES
+// ============================================================================
+// 5. ROLE & SESSION MANAGEMENT (NO PASSWORDS IN STORAGE)
+// ============================================================================
+function getActiveSession() {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY_SESSION) || localStorage.getItem(STORAGE_KEY_SESSION);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function setActiveSession(userObj, rememberInLocalStorage = false) {
+  try {
+    const serialized = JSON.stringify(userObj);
+    sessionStorage.setItem(STORAGE_KEY_SESSION, serialized);
+    if (rememberInLocalStorage) {
+      localStorage.setItem(STORAGE_KEY_SESSION, serialized);
+    }
+  } catch (e) {
+    console.error("Error saving session:", e);
+  }
+}
+
+function clearActiveSession() {
+  sessionStorage.removeItem(STORAGE_KEY_SESSION);
+  localStorage.removeItem(STORAGE_KEY_SESSION);
+}
+
+/**
+ * Role & Session Guard
+ * Enforces role access on protected pages during the demonstration.
+ * @param {string} requiredRole - "Patient" or "Physician"
+ * @param {string} redirectUrl - where to redirect if unauthorized (default login.html)
+ */
+function enforceRoleGuard(requiredRole, redirectUrl = "login.html") {
+  const session = getActiveSession();
+
+  if (!session || !session.role) {
+    // Unauthenticated: redirect to login
+    window.location.replace(`${redirectUrl}?notice=auth_required&role=${encodeURIComponent(requiredRole)}`);
+    return null;
+  }
+
+  if (session.role.toLowerCase() !== requiredRole.toLowerCase()) {
+    // Role mismatch: redirect to their own portal
+    if (session.role.toLowerCase() === "patient") {
+      window.location.replace("patient-dashboard.html?notice=role_redirect");
+    } else if (session.role.toLowerCase() === "physician") {
+      window.location.replace("physician-dashboard.html?notice=role_redirect");
+    } else {
+      window.location.replace("login.html");
+    }
+    return null;
+  }
+
+  return session;
+}
+
+/**
+ * Global Portal Navbar Sync
+ * Configures role-specific navigation links. Neither role sees the other's options.
+ */
+function syncPortalNavbar() {
+  const session = getActiveSession();
+  const navSlot = document.getElementById("navbarUserSlot");
+  if (!navSlot) return;
+
+  if (session && session.role === "Patient") {
+    navSlot.innerHTML = `
+      <div class="dropdown d-inline-block">
+        <button class="btn btn-sm btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-check-fill text-teal"></i>
+          <span class="fw-semibold">${escapeHtml(session.name || 'Patient')}</span>
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Patient</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><h6 class="dropdown-header">Patient Portal</h6></li>
+          <li><a class="dropdown-item" href="patient-dashboard.html"><i class="bi bi-speedometer2 me-2"></i>My Dashboard</a></li>
+          <li><a class="dropdown-item" href="doctors.html"><i class="bi bi-person-lines-fill me-2"></i>Browse Doctors</a></li>
+          <li><a class="dropdown-item" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-2"></i>My Bookings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+        </ul>
+      </div>
+    `;
+  } else if (session && session.role === "Physician") {
+    navSlot.innerHTML = `
+      <div class="dropdown d-inline-block">
+        <button class="btn btn-sm btn-outline-teal dropdown-toggle d-flex align-items-center gap-2" style="border: 1.5px solid var(--teal-accent); color: var(--teal-dark);" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-heart-pulse-fill text-teal"></i>
+          <span class="fw-semibold">${escapeHtml(session.name || 'Physician')}</span>
+          <span class="badge bg-teal-light text-teal border border-teal-subtle">Physician</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><h6 class="dropdown-header">Consulting Physician</h6></li>
+          <li><a class="dropdown-item" href="physician-dashboard.html"><i class="bi bi-hospital me-2"></i>Physician Dashboard</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+        </ul>
+      </div>
+    `;
+  } else {
+    navSlot.innerHTML = `
+      <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+        <i class="bi bi-person-lock"></i>
+        <span>Portal Login</span>
+      </a>
+    `;
+  }
+}
+
+function handleLogout() {
+  clearActiveSession();
+  window.location.href = "login.html?notice=logged_out";
+}
+
+// ============================================================================
+// 6. BACKEND-READY SERVICE MODULES (Placeholder REST API Interfaces)
+// ============================================================================
+
+/**
+ * Authentication Service Interface
+ * Documentation: Connects to backend endpoints:
+ *   POST /api/v1/auth/login
+ *   POST /api/v1/auth/logout
+ */
+const authService = {
+  async login(email, password, role) {
+    // PLACEHOLDER: Real backend would execute:
+    // const res = await fetch('/api/v1/auth/login', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ email, password, role })
+    // });
+    // return await res.json();
+    return Promise.resolve({
+      connected: false,
+      message: "Static GitHub Pages frontend: Real authentication requires backend API."
+    });
+  },
+
+  loginDemo(roleKey, customDoctorId = null) {
+    if (roleKey === "patient") {
+      const p = DEMO_PREVIEW_ACCOUNTS.patient;
+      setActiveSession(p);
+      return p;
+    } else if (roleKey === "physician") {
+      let doc = DEMO_PREVIEW_ACCOUNTS.physician;
+      if (customDoctorId) {
+        const found = findDoctorById(customDoctorId);
+        if (found) {
+          doc = {
+            role: "Physician",
+            doctorId: found.id,
+            name: found.name,
+            specialty: found.specialty,
+            qualification: found.qualification,
+            email: found.email || `${found.id}@healthcare.demo`,
+            phone: "+91 98400 00000",
+            room: found.room || "Main OPD Complex"
+          };
+        }
+      }
+      setActiveSession(doc);
+      return doc;
+    }
+    return null;
+  }
+};
+
+/**
+ * Patient Service Interface
+ * Documentation: Connects to backend endpoints:
+ *   GET /api/v1/patient/appointments
+ *   POST /api/v1/appointments
+ *   PATCH /api/v1/appointments/:id/cancel
+ */
+const patientService = {
+  getAppointments(patientId = null) {
+    const list = getAppointments();
+    if (!patientId) {
+      const sess = getActiveSession();
+      patientId = sess && sess.role === "Patient" ? (sess.patientId || "pat-101") : null;
+    }
+    if (!patientId) return list;
+    return list.filter(item => !item.patientId || item.patientId === patientId);
+  },
+
+  createBooking(bookingData) {
+    // Check collision
+    if (isSlotBooked(bookingData.doctorId, bookingData.appointmentDate, bookingData.timeSlot)) {
+      throw new Error(`Slot ${bookingData.timeSlot} on ${bookingData.appointmentDate} is already occupied.`);
+    }
+
+    const bookingId = generateBookingId();
+    const newBooking = {
+      id: bookingId,
+      ...bookingData,
+      status: "Scheduled",
+      createdAt: new Date().toISOString()
+    };
+
+    const all = getAppointments();
+    all.push(newBooking);
+    saveAppointments(all);
+    return newBooking;
+  },
+
+  cancelBooking(bookingId) {
+    const all = getAppointments();
+    let updated = false;
+    const nextList = all.map(b => {
+      if (b.id === bookingId) {
+        updated = true;
+        return { ...b, status: "Cancelled" };
+      }
+      return b;
+    });
+
+    if (updated) {
+      saveAppointments(nextList);
+      return true;
+    }
+    return false;
+  }
+};
+
+/**
+ * Consulting Physician Service Interface
+ * Documentation: Connects to backend endpoints:
+ *   GET /api/v1/physician/appointments?doctorId=:id
+ *   PATCH /api/v1/appointments/:id/status
+ */
+const physicianService = {
+  getAssignedAppointments(doctorId) {
+    if (!doctorId) return [];
+    const list = getAppointments();
+    // Strictly isolate by doctorId
+    return list.filter(item => item.doctorId === doctorId || item.doctorName === doctorId);
+  },
+
+  updateStatus(bookingId, doctorId, newStatus) {
+    const validStatuses = ["Scheduled", "Completed", "Cancelled"];
+    if (!validStatuses.includes(newStatus)) {
+      throw new Error(`Invalid status: ${newStatus}`);
+    }
+
+    const list = getAppointments();
+    let found = false;
+    const updated = list.map(item => {
+      if (item.id === bookingId && (item.doctorId === doctorId || !doctorId)) {
+        found = true;
+        return { ...item, status: newStatus };
+      }
+      return item;
+    });
+
+    if (found) {
+      saveAppointments(updated);
+      return true;
+    }
+    return false;
+  }
+};
+
+// ============================================================================
+// 7. HELPER UTILITIES & LOOKUPS
+// ============================================================================
 function getOffsetDateString(daysOffset) {
   const d = new Date();
   d.setDate(d.getDate() + daysOffset);
@@ -836,7 +1268,7 @@ function generateBookingId() {
   return `HC-${new Date().getFullYear()}-${rand}`;
 }
 
-// Slot booking collision detection
+// Slot collision check
 function isSlotBooked(doctorNameOrId, date, slot, excludeBookingId = null) {
   const list = getAppointments();
   return list.some(item => {
@@ -850,7 +1282,6 @@ function isSlotBooked(doctorNameOrId, date, slot, excludeBookingId = null) {
   });
 }
 
-// Robust Doctor Lookups
 function findDoctorById(id) {
   if (!id) return null;
   return DOCTORS_DATA.find(d => d.id === id.trim()) || null;
@@ -868,26 +1299,22 @@ function findDoctorByIdOrName(query) {
   return findDoctorByName(query);
 }
 
-// Department list
 function getAllDepartments() {
   const depts = new Set();
   DOCTORS_DATA.forEach(d => depts.add(d.specialty));
   return Array.from(depts);
 }
 
-// Doctor count per department
 function getDepartmentCount(deptName) {
   if (!deptName || deptName.toLowerCase() === 'all') return DOCTORS_DATA.length;
   return DOCTORS_DATA.filter(d => d.specialty.toLowerCase() === deptName.toLowerCase()).length;
 }
 
-// Image fallback handler
 function handleImageError(imgEl) {
   imgEl.onerror = null;
   imgEl.src = "images/doctor_avatar_fallback.svg";
 }
 
-// HTML escape helper to prevent XSS
 function escapeHtml(str) {
   if (!str) return "";
   return String(str)
@@ -898,7 +1325,9 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-// 6. "MY BOOKINGS" MODAL SYSTEM
+// ============================================================================
+// 8. "MY BOOKINGS" MODAL SYSTEM
+// ============================================================================
 function openMyAppointmentsModal() {
   let modalEl = document.getElementById("myAppointmentsModal");
   if (!modalEl) {
@@ -937,14 +1366,17 @@ function renderModalAppointments() {
   const container = document.getElementById("modalAppointmentsBody");
   if (!container) return;
 
-  const bookings = getAppointments();
+  const session = getActiveSession();
+  const patientId = session && session.role === "Patient" ? session.patientId : null;
+  const bookings = patientService.getAppointments(patientId);
+
   if (bookings.length === 0) {
     container.innerHTML = `
       <div class="text-center py-5">
         <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
-        <h5 class="mt-3 fw-bold text-secondary">No Appointments Found</h5>
+        <h5 class="mt-3 fw-bold text-secondary">No Consultations Found</h5>
         <p class="text-muted small">You haven't scheduled any doctor consultations on this device yet.</p>
-        <a href="doctors.html" class="btn btn-primary mt-2">Choose a Doctor</a>
+        <a href="doctors.html" class="btn btn-primary mt-2">Find a Specialist</a>
       </div>
     `;
     return;
@@ -954,17 +1386,20 @@ function renderModalAppointments() {
   let html = `
     <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-3">
       <i class="bi bi-shield-check fs-5"></i>
-      <div><strong>Demonstration Storage:</strong> These bookings are stored in your browser's localStorage. Genuine production deployments connect to a secured clinical database.</div>
+      <div><strong>Demonstration Storage:</strong> These bookings are stored in browser localStorage. Real production portals synchronize with a secure clinical database.</div>
     </div>
   `;
 
   sorted.forEach(item => {
     const isCancelled = item.status === "Cancelled";
+    const isCompleted = item.status === "Completed";
+    const badgeClass = isCompleted ? 'bg-secondary' : (isCancelled ? 'bg-danger' : 'bg-success');
+
     html += `
       <div class="appointment-list-item d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 p-3 mb-3 ${isCancelled ? 'opacity-75 bg-light' : 'bg-white'}">
         <div>
           <div class="d-flex align-items-center gap-2">
-            <span class="badge ${isCancelled ? 'bg-danger' : 'bg-success'}">${escapeHtml(item.status)}</span>
+            <span class="badge ${badgeClass}">${escapeHtml(item.status)}</span>
             <span class="fw-bold text-primary font-monospace">${escapeHtml(item.id)}</span>
           </div>
           <h5 class="mb-1 mt-2 fw-bold text-navy">${escapeHtml(item.doctorName)}</h5>
@@ -988,15 +1423,11 @@ function renderModalAppointments() {
           <a href="success.html?bookingId=${encodeURIComponent(item.id)}" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-receipt me-1"></i>View Slip
           </a>
-          ${!isCancelled ? `
-            <button class="btn btn-outline-danger btn-sm" onclick="cancelAppointment('${escapeHtml(item.id)}')">
+          ${(!isCancelled && !isCompleted) ? `
+            <button class="btn btn-outline-danger btn-sm" onclick="handleModalCancelAppointment('${escapeHtml(item.id)}')">
               <i class="bi bi-x-circle me-1"></i>Cancel
             </button>
-          ` : `
-            <button class="btn btn-outline-secondary btn-sm" onclick="deleteAppointmentRecord('${escapeHtml(item.id)}')">
-              <i class="bi bi-trash me-1"></i>Remove
-            </button>
-          `}
+          ` : ''}
         </div>
       </div>
     `;
@@ -1005,26 +1436,16 @@ function renderModalAppointments() {
   container.innerHTML = html;
 }
 
-function cancelAppointment(bookingId) {
+function handleModalCancelAppointment(bookingId) {
   if (!confirm(`Are you sure you want to cancel appointment ${bookingId}?`)) return;
-
-  const bookings = getAppointments();
-  const updated = bookings.map(b => {
-    if (b.id === bookingId) {
-      return { ...b, status: "Cancelled" };
-    }
-    return b;
-  });
-
-  saveAppointments(updated);
+  patientService.cancelBooking(bookingId);
   renderModalAppointments();
 }
 
-function deleteAppointmentRecord(bookingId) {
-  if (!confirm(`Remove record ${bookingId} from history?`)) return;
-
-  const bookings = getAppointments();
-  const updated = bookings.filter(b => b.id !== bookingId);
-  saveAppointments(updated);
-  renderModalAppointments();
-}
+// ============================================================================
+// 9. AUTOMATIC INITIALIZATION
+// ============================================================================
+document.addEventListener("DOMContentLoaded", function() {
+  getAppointments(); // ensures initial seed
+  syncPortalNavbar();
+});

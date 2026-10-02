@@ -6,6 +6,8 @@ const urls = [
   'http://localhost:3000/doctors.html',
   'http://localhost:3000/appointment.html',
   'http://localhost:3000/login.html',
+  'http://localhost:3000/patient-dashboard.html',
+  'http://localhost:3000/physician-dashboard.html',
   'http://localhost:3000/success.html',
   'http://localhost:3000/css/style.css',
   'http://localhost:3000/js/script.js',

@@ -36,7 +36,7 @@
   <!-- Primary Navigation -->
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-      <a class="navbar-brand" href="home.html">
+      <a class="navbar-brand" href="patient-dashboard.html">
         <div class="brand-icon-box">
           <i class="bi bi-heart-pulse-fill"></i>
         </div>
@@ -53,15 +53,16 @@
       <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
+            <a class="nav-link" href="patient-dashboard.html"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Browse Doctors</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
           </li>
-          <li class="nav-item ms-lg-2">
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically via syncPortalNavbar -->
             <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
               <i class="bi bi-person-lock"></i>
               <span>Portal Login</span>
@@ -107,7 +108,7 @@
           </span>
           <h1 class="fw-bold text-navy">Book Your Specialist Consultation</h1>
           <p class="text-secondary mx-auto mb-0" style="max-width: 620px;">
-            Step 3 of 4: Select an available consultation date, time slot, and patient contact information.
+            Select an available consultation date and unreserved time slot with your chosen specialist.
           </p>
         </div>
 
@@ -134,7 +135,7 @@
                   <!-- Confirmed Doctor Banner -->
                   <div class="p-3 rounded-3 bg-light border mb-4 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-3">
-                      <img id="formDoctorThumb" src="images/doctor_avatar_fallback.svg" alt="Doctor Thumbnail" class="rounded-circle border" style="width: 50px; height: 50px; object-fit: cover;">
+                      <img id="formDoctorThumb" src="images/doctor_avatar_fallback.svg" alt="Doctor Thumbnail" class="rounded-circle border" onerror="handleImageError(this)" style="width: 50px; height: 50px; object-fit: cover;">
                       <div>
                         <div class="fw-bold text-navy" id="formDoctorName">Doctor Name</div>
                         <div class="text-teal small" id="formDoctorDept">Department</div>
@@ -149,7 +150,7 @@
                       <label for="patientName" class="form-label">
                         <i class="bi bi-person me-1 text-primary"></i> Patient Full Name <span class="text-danger">*</span>
                       </label>
-                      <input type="text" id="patientName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                      <input type="text" id="patientName" class="form-control" placeholder="e.g. Ananya Raman" required>
                       <div class="invalid-feedback">Please enter the patient's full name.</div>
                     </div>
 
@@ -157,7 +158,7 @@
                       <label for="patientPhone" class="form-label">
                         <i class="bi bi-telephone me-1 text-primary"></i> Contact Phone Number <span class="text-danger">*</span>
                       </label>
-                      <input type="tel" id="patientPhone" class="form-control" placeholder="e.g. +91 98401 23456" required>
+                      <input type="tel" id="patientPhone" class="form-control" placeholder="e.g. +91 98401 99999" required>
                       <div class="invalid-feedback">Please provide a reachable contact number.</div>
                     </div>
                   </div>
@@ -167,7 +168,7 @@
                     <label for="patientEmail" class="form-label">
                       <i class="bi bi-envelope me-1 text-primary"></i> Email Address <span class="text-danger">*</span>
                     </label>
-                    <input type="email" id="patientEmail" class="form-control" placeholder="patient@example.com" required>
+                    <input type="email" id="patientEmail" class="form-control" placeholder="patient@healthcare.demo" required>
                     <div class="invalid-feedback">Please provide an email for appointment receipt.</div>
                   </div>
 
@@ -282,7 +283,7 @@
                 <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
                   <li class="d-flex align-items-start gap-2">
                     <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                    <span>Free cancellation or rescheduling from "My Bookings".</span>
+                    <span>Free cancellation or rescheduling from Patient Dashboard.</span>
                   </li>
                   <li class="d-flex align-items-start gap-2">
                     <i class="bi bi-check-circle-fill text-success mt-1"></i>
@@ -306,53 +307,9 @@
 
   <!-- FOOTER -->
   <footer class="footer-custom">
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="d-flex align-items-center gap-2 mb-3">
-            <div class="brand-icon-box" style="width: 36px; height: 36px; font-size: 1.1rem;">
-              <i class="bi bi-heart-pulse-fill"></i>
-            </div>
-            <span class="fw-bold fs-5 text-white">HealthCare Portal</span>
-          </div>
-          <p class="small text-secondary mb-3">
-            A comprehensive outpatient appointment and doctor directory platform. Designed for accessible healthcare navigation.
-          </p>
-          <span class="small text-muted">&bull; 55 Doctors across 11 Medical Departments</span>
-        </div>
-
-        <div class="col-6 col-lg-2">
-          <h5>Quick Links</h5>
-          <ul class="list-unstyled d-flex flex-column gap-2 small">
-            <li><a href="home.html">Home</a></li>
-            <li><a href="doctors.html">Doctor Directory</a></li>
-            <li><a href="javascript:void(0)" onclick="openMyAppointmentsModal()">My Bookings</a></li>
-            <li><a href="login.html">Portal Login</a></li>
-          </ul>
-        </div>
-
-        <div class="col-6 col-lg-3">
-          <h5>Hospital Desk</h5>
-          <p class="small text-muted mb-1"><i class="bi bi-telephone me-1"></i> OPD Helpline: +91 98765 43210</p>
-          <p class="small text-muted mb-1"><i class="bi bi-envelope me-1"></i> appointments@healthcare.org</p>
-          <p class="small text-muted"><i class="bi bi-clock me-1"></i> Mon - Sat: 8:00 AM - 8:00 PM</p>
-        </div>
-
-        <div class="col-lg-3">
-          <h5>Demonstration Storage</h5>
-          <p class="small text-secondary mb-2">
-            Appointments created here are saved directly to your browser's localStorage for demonstration and review.
-          </p>
-          <div class="badge bg-secondary-subtle text-secondary border">Local Persistence Active</div>
-        </div>
-      </div>
-
-      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <p class="mb-0 text-muted small">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
-        <div class="d-flex gap-3 small text-muted">
-          <span>Demonstration Environment</span>
-        </div>
-      </div>
+    <div class="container text-center text-muted small">
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
+      <span>Patient Booking Portal &bull; Demonstration Environment</span>
     </div>
   </footer>
 
@@ -364,6 +321,7 @@
 
   <script>
     let selectedDoctor = null;
+    let activeSession = null;
 
     function renderTimeSlots() {
       const container = document.getElementById("timeSlotContainer");
@@ -447,46 +405,47 @@
         return false;
       }
 
-      // Check duplicate slot collision
+      // Check collision
       if (isSlotBooked(selectedDoctor.id, appointmentDate, timeSlot)) {
         showAlert(`Slot ${timeSlot} on ${appointmentDate} with ${selectedDoctor.name} has just been reserved. Please pick another slot.`, "danger");
         renderTimeSlots();
         return false;
       }
 
-      // Save appointment to localStorage
-      const bookingId = generateBookingId();
-      const newBooking = {
-        id: bookingId,
-        patientName: patientName,
-        phone: patientPhone,
-        email: patientEmail,
-        doctorId: selectedDoctor.id,
-        doctorName: selectedDoctor.name,
-        specialty: selectedDoctor.specialty,
-        appointmentDate: appointmentDate,
-        timeSlot: timeSlot,
-        fee: selectedDoctor.fee,
-        room: selectedDoctor.room || "Main OPD Block",
-        notes: notes,
-        status: "Confirmed",
-        createdAt: new Date().toISOString()
-      };
+      try {
+        const bookingData = {
+          patientId: activeSession ? activeSession.patientId : "pat-101",
+          patientName: patientName,
+          phone: patientPhone,
+          email: patientEmail,
+          patientAge: activeSession ? (activeSession.age || 32) : 32,
+          patientGender: activeSession ? (activeSession.gender || "Adult") : "Adult",
+          doctorId: selectedDoctor.id,
+          doctorName: selectedDoctor.name,
+          specialty: selectedDoctor.specialty,
+          appointmentDate: appointmentDate,
+          timeSlot: timeSlot,
+          fee: selectedDoctor.fee,
+          room: selectedDoctor.room || "Main OPD Complex",
+          notes: notes
+        };
 
-      const allBookings = getAppointments();
-      allBookings.push(newBooking);
-      saveAppointments(allBookings);
+        const confirmedBooking = patientService.createBooking(bookingData);
 
-      // Redirection to success.html with booking ID
-      showAlert("Appointment confirmed! Generating your digital slip...", "success");
-      
-      const submitBtn = document.getElementById("btnSubmitBooking");
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Generating Slip...`;
+        // Feedback & Redirection to success.html with booking ID
+        showAlert("Appointment confirmed! Generating your digital slip...", "success");
+        
+        const submitBtn = document.getElementById("btnSubmitBooking");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Generating Slip...`;
 
-      setTimeout(() => {
-        window.location.href = `success.html?bookingId=${encodeURIComponent(bookingId)}`;
-      }, 600);
+        setTimeout(() => {
+          window.location.href = `success.html?bookingId=${encodeURIComponent(confirmedBooking.id)}`;
+        }, 600);
+
+      } catch (err) {
+        showAlert(err.message, "danger");
+      }
 
       return false;
     }
@@ -505,7 +464,22 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-      // 1. Inspect URL parameters for doctorId or doctor
+      // 1. Enforce Patient Role Guard
+      activeSession = enforceRoleGuard("Patient", "login.html");
+      if (!activeSession) return;
+
+      // 2. Pre-fill patient details from active patient session
+      if (activeSession.name) {
+        document.getElementById("patientName").value = activeSession.name;
+      }
+      if (activeSession.phone) {
+        document.getElementById("patientPhone").value = activeSession.phone;
+      }
+      if (activeSession.email) {
+        document.getElementById("patientEmail").value = activeSession.email;
+      }
+
+      // 3. Inspect URL parameters for doctorId or doctor
       const params = new URLSearchParams(window.location.search);
       const docQuery = params.get("doctorId") || params.get("doctor");
 
