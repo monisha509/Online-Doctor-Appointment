@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Appointment Confirmed | HealthCare Hub</title>
+  <title>Appointment Confirmed | HealthCare Portal</title>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,12 +19,12 @@
 </head>
 <body>
 
-  <!-- Top Notice Bar (Hidden during print) -->
+  <!-- Top Clinical Information Bar (Hidden when printing) -->
   <div class="top-notice-bar no-print">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
       <div class="d-flex align-items-center gap-2">
-        <img src="images/REC.png" alt="Rajalakshmi Engineering College" class="college-logo-img" style="height: 24px; filter: brightness(0) invert(1);">
-        <span class="fw-semibold">Rajalakshmi Engineering College &bull; Student Project Demonstration</span>
+        <i class="bi bi-hospital text-info"></i>
+        <span class="fw-semibold">HealthCare Outpatient Consultation &amp; Specialist Clinic Management</span>
       </div>
       <div>
         <a href="home.html" class="text-white text-decoration-none small"><i class="bi bi-house me-1"></i>Back to Home</a>
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <!-- Primary Sticky Navigation (Hidden during print) -->
+  <!-- Primary Sticky Navigation (Hidden when printing) -->
   <nav class="navbar navbar-expand-lg navbar-custom no-print">
     <div class="container">
       <a class="navbar-brand" href="home.html">
@@ -41,7 +41,7 @@
         </div>
         <div class="d-flex flex-column">
           <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
-          <span class="text-muted small" style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;">CLINIC APPOINTMENT SYSTEM</span>
+          <span class="brand-pill-badge">CLINICAL MANAGEMENT SYSTEM</span>
         </div>
       </a>
 
@@ -58,16 +58,12 @@
             <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="appointment.html"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
           </li>
-          <li class="nav-item ms-lg-2" id="navbarUserSlot">
-            <!-- Populated dynamically by js/script.js -->
+          <li class="nav-item ms-lg-2">
             <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-in-right"></i>
-              <span>Demo Login</span>
+              <i class="bi bi-person-lock"></i>
+              <span>Portal Login</span>
             </a>
           </li>
         </ul>
@@ -100,7 +96,7 @@
             <i class="bi bi-printer me-1"></i> Print Slip
           </button>
           <div class="d-flex gap-2">
-            <a href="appointment.html" class="btn btn-outline-primary">
+            <a href="doctors.html" class="btn btn-outline-primary">
               <i class="bi bi-plus-circle me-1"></i> Book Another
             </a>
             <a href="home.html" class="btn btn-primary">
@@ -117,8 +113,8 @@
   <!-- FOOTER (Hidden during print) -->
   <footer class="footer-custom no-print">
     <div class="container text-center text-muted small">
-      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Demonstration Environment</p>
-      <span>Rajalakshmi Engineering College &bull; Academic Portfolio Project</span>
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
+      <span>Outpatient Clinical Management &bull; Demonstration Environment</span>
     </div>
   </footer>
 
@@ -151,8 +147,8 @@
           <div class="text-center py-4">
             <i class="bi bi-calendar-x text-muted fs-1 mb-2 d-block"></i>
             <h5 class="fw-bold text-navy">No Appointment Record Found</h5>
-            <p class="text-muted small">We could not locate this booking reference in the demo storage.</p>
-            <a href="appointment.html" class="btn btn-primary btn-sm mt-2">Book a New Consultation</a>
+            <p class="text-muted small">We could not locate this booking reference in the local storage.</p>
+            <a href="doctors.html" class="btn btn-primary btn-sm mt-2">Select a Doctor to Book</a>
           </div>
         `;
         return;
@@ -161,7 +157,7 @@
       body.innerHTML = `
         <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
           <div>
-            <span class="text-muted small d-block">Reference Code:</span>
+            <span class="text-muted small d-block">Booking Reference:</span>
             <span class="fw-bold fs-5 font-monospace text-primary">${escapeHtml(targetBooking.id)}</span>
           </div>
           <div>
@@ -187,7 +183,7 @@
           </div>
           <div class="col-sm-6">
             <span class="text-muted small d-block">Consultation Schedule</span>
-            <span class="fw-bold text-primary">
+            <span class="fw-bold text-primary d-block">
               <i class="bi bi-calendar-check me-1"></i>${escapeHtml(targetBooking.appointmentDate)}
             </span>
             <span class="fw-bold text-navy d-block">
@@ -198,19 +194,19 @@
 
         <div class="p-3 rounded-3 bg-light border mb-3">
           <div class="d-flex justify-content-between small text-secondary mb-1">
-            <span>OPD Consultation Fee:</span>
+            <span>Specialist OPD Fee:</span>
             <span class="fw-bold text-navy">₹${escapeHtml(String(targetBooking.fee || '500'))}</span>
           </div>
           <div class="d-flex justify-content-between small text-secondary">
-            <span>Hospital Clinic Location:</span>
-            <span class="fw-semibold text-navy">OPD Wing B, Campus Health Center</span>
+            <span>Consulting Suite / Room:</span>
+            <span class="fw-semibold text-navy">${escapeHtml(targetBooking.room || 'Main OPD Complex')}</span>
           </div>
         </div>
 
         <div class="alert alert-info py-2 px-3 small mb-0 d-flex gap-2">
           <i class="bi bi-info-circle-fill fs-5 text-primary"></i>
           <div>
-            <strong>Patient Instructions:</strong> Please arrive 10-15 minutes prior to your allocated slot. Present this digital slip or reference code at the registration desk.
+            <strong>Patient Instructions:</strong> Please report to the consultation suite 10-15 minutes prior to your allocated slot. Present this reference code (${escapeHtml(targetBooking.id)}) at the registration desk.
           </div>
         </div>
       `;

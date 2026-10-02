@@ -139,11 +139,12 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
 }
 
-.college-logo-img {
-  height: 38px;
-  width: auto;
-  object-fit: contain;
-  filter: contrast(1.05);
+/* Clinical brand badge styling */
+.brand-pill-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--teal-accent);
 }
 
 .navbar-custom .nav-link {

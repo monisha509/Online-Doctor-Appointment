@@ -9,9 +9,10 @@ const urls = [
   'http://localhost:3000/success.html',
   'http://localhost:3000/css/style.css',
   'http://localhost:3000/js/script.js',
-  'http://localhost:3000/images/REC.png',
-  'http://localhost:3000/images/doctor1.jpg',
-  'http://localhost:3000/images/doctor11.jpg',
+  'http://localhost:3000/images/doctor_avatar_fallback.svg',
+  'http://localhost:3000/images/doctor_001.jpg',
+  'http://localhost:3000/images/doctor_025.jpg',
+  'http://localhost:3000/images/doctor_055.jpg',
   'http://localhost:3000/images/indexbg.jpg',
   'http://localhost:3000/images/loginbg.jpg',
   'http://localhost:3000/images/appointmentbg.jpg',
@@ -32,7 +33,8 @@ async function checkUrl(url) {
 }
 
 async function run() {
-  console.log("Running endpoint verification...");
+  console.log("Running server endpoint verification...");
+  let failed = 0;
   for (const u of urls) {
     try {
       const res = await checkUrl(u);
@@ -40,10 +42,17 @@ async function run() {
         console.log(`[PASS] ${res.status} OK - ${res.url} (${res.length} bytes)`);
       } else {
         console.error(`[FAIL] ${res.status} - ${res.url}`);
+        failed++;
       }
     } catch (e) {
       console.error(`[ERROR] ${u}: ${e.message}`);
+      failed++;
     }
+  }
+  if (failed === 0) {
+    console.log("All endpoints returned 200 OK!");
+  } else {
+    process.exit(1);
   }
 }
 
