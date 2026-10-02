@@ -364,7 +364,7 @@
       hint.className = availableCount > 0 ? "badge bg-success-subtle text-success border border-success-subtle" : "badge bg-danger-subtle text-danger border border-danger-subtle";
     }
 
-    function handleAppointmentSubmit(event) {
+    async function handleAppointmentSubmit(event) {
       event.preventDefault();
       const form = document.getElementById("appointmentForm");
       const slotFeedback = document.getElementById("slotErrorFeedback");
@@ -405,16 +405,9 @@
         return false;
       }
 
-      // Check collision
-      if (isSlotBooked(selectedDoctor.id, appointmentDate, timeSlot)) {
-        showAlert(`Slot ${timeSlot} on ${appointmentDate} with ${selectedDoctor.name} has just been reserved. Please pick another slot.`, "danger");
-        renderTimeSlots();
-        return false;
-      }
-
       try {
         const bookingData = {
-          patientId: activeSession ? activeSession.patientId : "pat-101",
+          patientId: activeSession ? (activeSession.id || activeSession.patientId) : "usr-pat-101",
           patientName: patientName,
           phone: patientPhone,
           email: patientEmail,
@@ -430,7 +423,7 @@
           notes: notes
         };
 
-        const confirmedBooking = patientService.createBooking(bookingData);
+        const confirmedBooking = await patientService.createBooking(bookingData);
 
         // Feedback & Redirection to success.html with booking ID
         showAlert("Appointment confirmed! Generating your digital slip...", "success");
@@ -441,10 +434,11 @@
 
         setTimeout(() => {
           window.location.href = `success.html?bookingId=${encodeURIComponent(confirmedBooking.id)}`;
-        }, 600);
+        }, 500);
 
       } catch (err) {
         showAlert(err.message, "danger");
+        renderTimeSlots();
       }
 
       return false;

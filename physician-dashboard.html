@@ -102,17 +102,15 @@
           </div>
 
           <div class="col-lg-4 text-lg-end">
-            <!-- Demo Quick Doctor Switcher for Evaluators -->
             <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-25 text-start">
-              <span class="text-white small fw-bold d-block mb-1"><i class="bi bi-arrow-repeat me-1"></i>Demo Profile Switcher</span>
-              <p class="text-white-50" style="font-size: 0.75rem; margin-bottom: 6px;">Test appointment isolation between different physicians:</p>
-              <select id="quickSwitchDocSelect" class="form-select form-select-sm" onchange="switchDemoPhysician(this.value)">
-                <option value="doc-001">Dr. John Smith (Cardiology)</option>
-                <option value="doc-021">Dr. Emily Clark (Dermatology)</option>
-                <option value="doc-011">Dr. Michael Brown (Orthopedics)</option>
-                <option value="doc-016">Dr. James Anderson (Pediatrics)</option>
-                <option value="doc-026">Dr. Robert Miller (Neurology)</option>
-              </select>
+              <span class="text-white small fw-bold d-block mb-2"><i class="bi bi-shield-check text-info me-1"></i>Verified Clinical Account</span>
+              <div class="d-flex align-items-center gap-3">
+                <img id="heroDocAvatar" src="images/doctor_avatar_fallback.svg" alt="Doctor" class="rounded-circle border border-2 border-white shadow-sm" style="width: 58px; height: 58px; object-fit: cover;">
+                <div>
+                  <span class="text-white-50 small d-block">Staff Doctor ID:</span>
+                  <strong class="text-white font-monospace fs-6" id="heroDocStaffId">doc-001</strong>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -279,7 +277,7 @@
     let physicianStatusFilterVal = "all";
 
     // 1. Session Guard Check
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", async function() {
       activePhysicianSession = enforceRoleGuard("Physician", "login.html");
       if (!activePhysicianSession) return;
 
@@ -289,36 +287,28 @@
       // Populate hero information
       document.getElementById("heroDocName").textContent = assignedDocProfile.name;
       document.getElementById("navDocName").textContent = assignedDocProfile.name;
-      document.getElementById("heroDocSpecialty").textContent = `${assignedDocProfile.specialty} &bull; ${assignedDocProfile.qualification}`;
+      document.getElementById("heroDocSpecialty").innerHTML = `${escapeHtml(assignedDocProfile.specialty)} &bull; ${escapeHtml(assignedDocProfile.qualification)}`;
       document.getElementById("navDocSpecialty").textContent = assignedDocProfile.specialty;
       document.getElementById("heroDocRoom").textContent = assignedDocProfile.room || "Main OPD Complex";
       document.getElementById("heroDocAvailability").textContent = assignedDocProfile.availability;
       document.getElementById("heroDocFee").textContent = assignedDocProfile.fee;
       document.getElementById("activeDocIdBadge").textContent = assignedDocProfile.id;
-
-      // Set quick-switcher dropdown to active doctor
-      const switcher = document.getElementById("quickSwitchDocSelect");
-      if (switcher) switcher.value = assignedDocProfile.id;
+      document.getElementById("heroDocStaffId").textContent = assignedDocProfile.id;
+      document.getElementById("heroDocAvatar").src = assignedDocProfile.img || "images/doctor_avatar_fallback.svg";
 
       // Set today's date badge
       document.getElementById("scheduleTodayDate").textContent = getTodayDateString();
 
       // Render today's schedule and consultations
-      renderPhysicianDashboard();
+      await renderPhysicianDashboard();
     });
 
-    // Switch demo physician profile for evaluator testing
-    function switchDemoPhysician(docId) {
-      authService.loginDemo("physician", docId);
-      window.location.reload();
-    }
-
     // 2. Render Dashboard (Metrics, Today's Schedule, Consultations Table)
-    function renderPhysicianDashboard() {
+    async function renderPhysicianDashboard() {
       if (!assignedDocProfile) return;
 
       const docId = assignedDocProfile.id;
-      const docAppointments = physicianService.getAssignedAppointments(docId);
+      const docAppointments = await physicianService.getAssignedAppointments(docId);
       const todayStr = getTodayDateString();
 
       // Compute metrics
@@ -521,9 +511,8 @@
     }
 
     // Patient Details Modal
-    function openPatientDetailsModal(bookingId) {
-      const appointments = physicianService.getAssignedAppointments(assignedDocProfile.id);
-      const appt = appointments.find(b => b.id === bookingId);
+    async function openPatientDetailsModal(bookingId) {
+      const appt = await physicianService.getAppointmentById(bookingId);
       if (!appt) return;
 
       const body = document.getElementById("patientDetailsModalBody");
@@ -551,11 +540,11 @@
           </div>
           <div class="col-6">
             <span class="text-muted small d-block">Contact Phone</span>
-            <span><i class="bi bi-telephone me-1"></i>${escapeHtml(appt.phone)}</span>
+            <span><i class="bi bi-telephone me-1"></i>${escapeHtml(appt.patientPhone || appt.phone || 'N/A')}</span>
           </div>
           <div class="col-6">
             <span class="text-muted small d-block">Contact Email</span>
-            <span><i class="bi bi-envelope me-1"></i>${escapeHtml(appt.email || 'N/A')}</span>
+            <span><i class="bi bi-envelope me-1"></i>${escapeHtml(appt.patientEmail || appt.email || 'N/A')}</span>
           </div>
           <div class="col-6">
             <span class="text-muted small d-block">Consultation Date</span>
@@ -576,7 +565,7 @@
 
         <div class="alert alert-info py-2 small mb-0 mt-3 d-flex gap-2">
           <i class="bi bi-info-circle-fill text-primary mt-1"></i>
-          <span>Fictional demonstration consultation record. No real electronic health records (EHR) stored.</span>
+          <span>Clinical Consultation Record &bull; Outpatient Management System</span>
         </div>
       `;
 
@@ -592,11 +581,11 @@
       modal.show();
     }
 
-    function saveStatusUpdate() {
+    async function saveStatusUpdate() {
       const bookingId = document.getElementById("modalTargetBookingId").value;
       const newStatus = document.getElementById("modalNewStatusSelect").value;
 
-      physicianService.updateStatus(bookingId, assignedDocProfile.id, newStatus);
+      await physicianService.updateStatus(bookingId, assignedDocProfile.id, newStatus);
 
       // Hide modal
       const modalEl = document.getElementById("updateStatusModal");
@@ -604,7 +593,7 @@
       if (modal) modal.hide();
 
       // Re-render
-      renderPhysicianDashboard();
+      await renderPhysicianDashboard();
     }
   </script>
 </body>

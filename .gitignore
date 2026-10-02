@@ -1,0 +1,8 @@
+# Ignore SQLite runtime database binaries and journals
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/*.db-journal
+
+# Logs
+*.log

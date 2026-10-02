@@ -281,10 +281,10 @@
     });
 
     // 2. Render My Appointments
-    function renderPatientAppointments() {
+    async function renderPatientAppointments() {
       const container = document.getElementById("patientAppointmentsContainer");
-      const patientId = activePatientSession ? activePatientSession.patientId : null;
-      const allList = patientService.getAppointments(patientId);
+      const patientId = activePatientSession ? (activePatientSession.id || activePatientSession.patientId) : null;
+      const allList = await patientService.getAppointments(patientId);
 
       // Compute stats
       let upcomingCount = 0;
@@ -322,7 +322,7 @@
       }
 
       let html = "";
-      filtered.reverse().forEach(item => {
+      [...filtered].reverse().forEach(item => {
         const isCancelled = item.status === "Cancelled";
         const isCompleted = item.status === "Completed";
         const isScheduled = item.status === "Scheduled";
@@ -349,7 +349,7 @@
 
                 <div class="text-secondary small">
                   <span>Fee: <strong>₹${escapeHtml(String(item.fee || '500'))}</strong></span> &bull; 
-                  <span>Patient: <strong>${escapeHtml(item.patientName)}</strong> (${escapeHtml(item.phone)})</span>
+                  <span>Patient: <strong>${escapeHtml(item.patientName)}</strong> (${escapeHtml(item.phone || item.patientPhone || '')})</span>
                 </div>
 
                 ${item.notes ? `<div class="mt-2 text-muted small fst-italic"><i class="bi bi-chat-quote me-1"></i>"${escapeHtml(item.notes)}"</div>` : ''}
@@ -380,10 +380,10 @@
       renderPatientAppointments();
     }
 
-    function cancelPatientAppointment(bookingId) {
+    async function cancelPatientAppointment(bookingId) {
       if (!confirm(`Are you sure you want to cancel appointment ${bookingId}? The reserved slot will be freed.`)) return;
-      patientService.cancelBooking(bookingId);
-      renderPatientAppointments();
+      await patientService.cancelBooking(bookingId);
+      await renderPatientAppointments();
     }
 
     // 3. Render Doctors Grid

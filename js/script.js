@@ -820,43 +820,10 @@ const STANDARD_TIME_SLOTS = [
 ];
 
 // ============================================================================
-// 3. STORAGE KEYS & DEMO ACCOUNTS (NO PASSWORDS STORED)
+// 3. STORAGE KEYS & SESSION HANDLING (ZERO PASSWORDS STORED)
 // ============================================================================
-const STORAGE_KEY_APPOINTMENTS = "healthcare_appointments_demo";
-const STORAGE_KEY_SESSION = "healthcare_active_session_demo";
-
-// Fictional Prototype Accounts for Demonstration
-const DEMO_PREVIEW_ACCOUNTS = {
-  patient: {
-    role: "Patient",
-    patientId: "pat-101",
-    name: "Ananya Raman",
-    email: "ananya.raman@healthcare.demo",
-    phone: "+91 98401 99999",
-    age: 32,
-    gender: "Female"
-  },
-  physician: {
-    role: "Physician",
-    doctorId: "doc-001",
-    name: "Dr. John Smith",
-    specialty: "Cardiology",
-    qualification: "MBBS, MD, DM (Cardiology)",
-    email: "dr.johnsmith@healthcare.demo",
-    phone: "+91 98400 11001",
-    room: "Cardiology Wing - Room 101"
-  },
-  physicianSecondary: {
-    role: "Physician",
-    doctorId: "doc-021",
-    name: "Dr. Emily Clark",
-    specialty: "Dermatology",
-    qualification: "MBBS, MD (DVL)",
-    email: "dr.emilyclark@healthcare.demo",
-    phone: "+91 98400 11021",
-    room: "Skin & Laser Suite - Room 501"
-  }
-};
+const STORAGE_KEY_APPOINTMENTS = "healthcare_appointments";
+const STORAGE_KEY_SESSION = "healthcare_active_session";
 
 // ============================================================================
 // 4. STORAGE ACCESS & INITIAL DATA SEEDING
@@ -865,11 +832,10 @@ function getAppointments() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_APPOINTMENTS);
     if (!raw) {
-      // Seed with realistic fictional outpatient appointments
       const initialBookings = [
         {
           id: "HC-2026-1042",
-          patientId: "pat-101",
+          patientId: "usr-pat-101",
           patientName: "Ananya Raman",
           email: "ananya.raman@healthcare.demo",
           phone: "+91 98401 99999",
@@ -888,9 +854,9 @@ function getAppointments() {
         },
         {
           id: "HC-2026-1043",
-          patientId: "pat-102",
+          patientId: "usr-pat-102",
           patientName: "Karthik Verma",
-          email: "karthik.demo@healthcare.local",
+          email: "karthik.verma@healthcare.demo",
           phone: "+91 98403 88888",
           patientAge: 48,
           patientGender: "Male",
@@ -906,27 +872,8 @@ function getAppointments() {
           createdAt: new Date().toISOString()
         },
         {
-          id: "HC-2026-1044",
-          patientId: "pat-103",
-          patientName: "Suresh Menon",
-          email: "suresh.demo@healthcare.local",
-          phone: "+91 98404 77777",
-          patientAge: 56,
-          patientGender: "Male",
-          doctorId: "doc-001",
-          doctorName: "Dr. John Smith",
-          specialty: "Cardiology",
-          appointmentDate: getOffsetDateString(-2),
-          timeSlot: "09:00 AM",
-          status: "Completed",
-          fee: 700,
-          room: "Cardiology Wing - Room 101",
-          notes: "Lipid profile consultation. Completed normally.",
-          createdAt: new Date().toISOString()
-        },
-        {
           id: "HC-2026-1045",
-          patientId: "pat-101",
+          patientId: "usr-pat-101",
           patientName: "Ananya Raman",
           email: "ananya.raman@healthcare.demo",
           phone: "+91 98401 99999",
@@ -941,25 +888,6 @@ function getAppointments() {
           fee: 600,
           room: "Skin & Laser Suite - Room 501",
           notes: "Follow up consultation for seasonal skin allergy.",
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: "HC-2026-1046",
-          patientId: "pat-104",
-          patientName: "Vikram Das",
-          email: "vikram.demo@healthcare.local",
-          phone: "+91 98405 66666",
-          patientAge: 41,
-          patientGender: "Male",
-          doctorId: "doc-011",
-          doctorName: "Dr. Michael Brown",
-          specialty: "Orthopedics",
-          appointmentDate: getOffsetDateString(-1),
-          timeSlot: "10:00 AM",
-          status: "Cancelled",
-          fee: 650,
-          room: "Orthopedic Pavilion - Room 301",
-          notes: "Patient cancelled due to unexpected travel.",
           createdAt: new Date().toISOString()
         }
       ];
@@ -1012,7 +940,7 @@ function clearActiveSession() {
 
 /**
  * Role & Session Guard
- * Enforces role access on protected pages during the demonstration.
+ * Enforces role access on protected pages.
  * @param {string} requiredRole - "Patient" or "Physician"
  * @param {string} redirectUrl - where to redirect if unauthorized (default login.html)
  */
@@ -1020,13 +948,11 @@ function enforceRoleGuard(requiredRole, redirectUrl = "login.html") {
   const session = getActiveSession();
 
   if (!session || !session.role) {
-    // Unauthenticated: redirect to login
     window.location.replace(`${redirectUrl}?notice=auth_required&role=${encodeURIComponent(requiredRole)}`);
     return null;
   }
 
   if (session.role.toLowerCase() !== requiredRole.toLowerCase()) {
-    // Role mismatch: redirect to their own portal
     if (session.role.toLowerCase() === "patient") {
       window.location.replace("patient-dashboard.html?notice=role_redirect");
     } else if (session.role.toLowerCase() === "physician") {
@@ -1042,7 +968,6 @@ function enforceRoleGuard(requiredRole, redirectUrl = "login.html") {
 
 /**
  * Global Portal Navbar Sync
- * Configures role-specific navigation links. Neither role sees the other's options.
  */
 function syncPortalNavbar() {
   const session = getActiveSession();
@@ -1093,85 +1018,124 @@ function syncPortalNavbar() {
   }
 }
 
-function handleLogout() {
-  clearActiveSession();
+async function handleLogout() {
+  await authService.logout();
   window.location.href = "login.html?notice=logged_out";
 }
 
 // ============================================================================
-// 6. BACKEND-READY SERVICE MODULES (Placeholder REST API Interfaces)
+// 6. BACKEND REST API SERVICE MODULES
 // ============================================================================
 
 /**
- * Authentication Service Interface
- * Documentation: Connects to backend endpoints:
+ * Authentication Service
+ * Endpoints:
  *   POST /api/v1/auth/login
  *   POST /api/v1/auth/logout
+ *   GET  /api/v1/auth/me
  */
 const authService = {
   async login(email, password, role) {
-    // PLACEHOLDER: Real backend would execute:
-    // const res = await fetch('/api/v1/auth/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password, role })
-    // });
-    // return await res.json();
-    return Promise.resolve({
-      connected: false,
-      message: "Static GitHub Pages frontend: Real authentication requires backend API."
-    });
+    try {
+      const res = await fetch('/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        // Store authenticated session token and profile (NO PASSWORDS!)
+        setActiveSession({
+          ...data.user,
+          token: data.token
+        });
+        return { success: true, user: data.user, token: data.token };
+      }
+      return { success: false, error: data.error || 'Authentication failed' };
+    } catch (err) {
+      throw new Error("Authentication service is currently unavailable. Please ensure the backend server is running.");
+    }
   },
 
-  loginDemo(roleKey, customDoctorId = null) {
-    if (roleKey === "patient") {
-      const p = DEMO_PREVIEW_ACCOUNTS.patient;
-      setActiveSession(p);
-      return p;
-    } else if (roleKey === "physician") {
-      let doc = DEMO_PREVIEW_ACCOUNTS.physician;
-      if (customDoctorId) {
-        const found = findDoctorById(customDoctorId);
-        if (found) {
-          doc = {
-            role: "Physician",
-            doctorId: found.id,
-            name: found.name,
-            specialty: found.specialty,
-            qualification: found.qualification,
-            email: found.email || `${found.id}@healthcare.demo`,
-            phone: "+91 98400 00000",
-            room: found.room || "Main OPD Complex"
-          };
-        }
+  async logout() {
+    try {
+      const session = getActiveSession();
+      if (session && session.token) {
+        await fetch('/api/v1/auth/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
       }
-      setActiveSession(doc);
-      return doc;
+    } catch (e) {
+      // Continue clearing client session even if network drops
     }
-    return null;
+    clearActiveSession();
+  },
+
+  async getCurrentUser() {
+    const session = getActiveSession();
+    if (!session) return null;
+    if (session.token) {
+      try {
+        const res = await fetch('/api/v1/auth/me', {
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return data.user;
+        }
+      } catch (e) {}
+    }
+    return session;
   }
 };
 
 /**
- * Patient Service Interface
- * Documentation: Connects to backend endpoints:
- *   GET /api/v1/patient/appointments
- *   POST /api/v1/appointments
- *   PATCH /api/v1/appointments/:id/cancel
+ * Patient Service
+ * Endpoints:
+ *   GET   /api/v1/patient/appointments
+ *   POST  /api/v1/appointments
+ *   PATCH /api/v1/patient/appointments/:id/cancel
  */
 const patientService = {
-  getAppointments(patientId = null) {
-    const list = getAppointments();
-    if (!patientId) {
-      const sess = getActiveSession();
-      patientId = sess && sess.role === "Patient" ? (sess.patientId || "pat-101") : null;
+  async getAppointments(patientId = null) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      try {
+        const res = await fetch('/api/v1/patient/appointments', {
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return data.appointments || [];
+        }
+      } catch (e) {
+        console.warn("Backend unavailable, checking fallback:", e);
+      }
     }
-    if (!patientId) return list;
-    return list.filter(item => !item.patientId || item.patientId === patientId);
+    const list = getAppointments();
+    return list.filter(item => !patientId || item.patientId === patientId);
   },
 
-  createBooking(bookingData) {
-    // Check collision
+  async createBooking(bookingData) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      const res = await fetch('/api/v1/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.token}`
+        },
+        body: JSON.stringify(bookingData)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to register appointment');
+      }
+      return data.booking;
+    }
+
+    // Local fallback check
     if (isSlotBooked(bookingData.doctorId, bookingData.appointmentDate, bookingData.timeSlot)) {
       throw new Error(`Slot ${bookingData.timeSlot} on ${bookingData.appointmentDate} is already occupied.`);
     }
@@ -1190,7 +1154,19 @@ const patientService = {
     return newBooking;
   },
 
-  cancelBooking(bookingId) {
+  async cancelBooking(bookingId) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      try {
+        const res = await fetch(`/api/v1/patient/appointments/${encodeURIComponent(bookingId)}/cancel`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) return true;
+      } catch (e) {}
+    }
+
     const all = getAppointments();
     let updated = false;
     const nextList = all.map(b => {
@@ -1210,20 +1186,66 @@ const patientService = {
 };
 
 /**
- * Consulting Physician Service Interface
- * Documentation: Connects to backend endpoints:
- *   GET /api/v1/physician/appointments?doctorId=:id
- *   PATCH /api/v1/appointments/:id/status
+ * Consulting Physician Service
+ * Endpoints:
+ *   GET   /api/v1/physician/appointments
+ *   GET   /api/v1/physician/appointments/:id
+ *   PATCH /api/v1/physician/appointments/:id/status
  */
 const physicianService = {
-  getAssignedAppointments(doctorId) {
-    if (!doctorId) return [];
-    const list = getAppointments();
-    // Strictly isolate by doctorId
-    return list.filter(item => item.doctorId === doctorId || item.doctorName === doctorId);
+  async getAssignedAppointments(doctorId = null) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      try {
+        const res = await fetch('/api/v1/physician/appointments', {
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return data.appointments || [];
+        }
+      } catch (e) {
+        console.warn("Backend unavailable, checking fallback:", e);
+      }
+    }
+    const targetDocId = doctorId || (session ? session.doctorId : null);
+    if (!targetDocId) return [];
+    return getAppointments().filter(item => item.doctorId === targetDocId);
   },
 
-  updateStatus(bookingId, doctorId, newStatus) {
+  async getAppointmentById(bookingId) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      try {
+        const res = await fetch(`/api/v1/physician/appointments/${encodeURIComponent(bookingId)}`, {
+          headers: { 'Authorization': `Bearer ${session.token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return data.appointment;
+        }
+      } catch (e) {}
+    }
+    return getAppointments().find(item => item.id === bookingId) || null;
+  },
+
+  async updateStatus(bookingId, doctorId, newStatus) {
+    const session = getActiveSession();
+    if (session && session.token) {
+      try {
+        const res = await fetch(`/api/v1/physician/appointments/${encodeURIComponent(bookingId)}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.token}`
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) return true;
+      } catch (e) {}
+    }
+
     const validStatuses = ["Scheduled", "Completed", "Cancelled"];
     if (!validStatuses.includes(newStatus)) {
       throw new Error(`Invalid status: ${newStatus}`);
@@ -1232,7 +1254,7 @@ const physicianService = {
     const list = getAppointments();
     let found = false;
     const updated = list.map(item => {
-      if (item.id === bookingId && (item.doctorId === doctorId || !doctorId)) {
+      if (item.id === bookingId && (!doctorId || item.doctorId === doctorId)) {
         found = true;
         return { ...item, status: newStatus };
       }
