@@ -7,6 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
+const ROOT_DIR = path.join(__dirname, '..');
+
 console.log("==================================================================");
 console.log("HEALTHCARE APPOINTMENT SYSTEM - ROLE-BASED PORTAL VALIDATION SUITE");
 console.log("==================================================================\n");
@@ -45,7 +47,7 @@ global.document = {
 };
 
 // Load js/script.js into context
-const scriptContent = fs.readFileSync(path.join(__dirname, 'js', 'script.js'), 'utf8');
+const scriptContent = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
 vm.runInThisContext(scriptContent);
 
 let totalPassed = 0;
@@ -64,7 +66,7 @@ function assertTest(condition, testId, description) {
 // -------------------------------------------------------------
 // Test 1: Role dropdown contains only Patient and Consulting Physician
 // -------------------------------------------------------------
-const loginHtml = fs.readFileSync(path.join(__dirname, 'login.html'), 'utf8');
+const loginHtml = fs.readFileSync(path.join(ROOT_DIR, 'login.html'), 'utf8');
 const hasPatientOption = loginHtml.includes('<option value="Patient"');
 const hasPhysicianOption = loginHtml.includes('<option value="Physician"');
 const roleOptionsCount = (loginHtml.match(/<option value="(Patient|Physician)"/g) || []).length;
@@ -86,7 +88,7 @@ const allFiles = [
 
 let opdAdminFound = false;
 allFiles.forEach(f => {
-  const content = fs.readFileSync(path.join(__dirname, f), 'utf8');
+  const content = fs.readFileSync(path.join(ROOT_DIR, f), 'utf8');
   if (content.toLowerCase().includes("opd administrator") || content.includes('"Admin"') || content.includes("'Admin'")) {
     opdAdminFound = true;
     console.error(`Unexpected OPD Admin reference in ${f}`);
@@ -276,7 +278,7 @@ assertTest(
 // -------------------------------------------------------------
 let brokenPathsFound = false;
 allFiles.forEach(file => {
-  const content = fs.readFileSync(path.join(__dirname, file), 'utf8');
+  const content = fs.readFileSync(path.join(ROOT_DIR, file), 'utf8');
   // Check for root absolute paths like href="/something" or src="/something" (excluding http/https/data:)
   const absoluteLinks = content.match(/(?:href|src)=["']\/(?!\/)[^"']*["']/g) || [];
   if (absoluteLinks.length > 0) {
@@ -296,7 +298,7 @@ assertTest(
 // -------------------------------------------------------------
 let responsiveValid = true;
 ['patient-dashboard.html', 'physician-dashboard.html', 'login.html'].forEach(f => {
-  const html = fs.readFileSync(path.join(__dirname, f), 'utf8');
+  const html = fs.readFileSync(path.join(ROOT_DIR, f), 'utf8');
   const hasViewport = html.includes('name="viewport"') && html.includes('width=device-width');
   const hasBootstrapGrid = html.includes('container') && (html.includes('col-md-') || html.includes('col-lg-') || html.includes('row g-'));
   if (!hasViewport || !hasBootstrapGrid) {
@@ -305,7 +307,7 @@ let responsiveValid = true;
   }
 });
 
-const cssContent = fs.readFileSync(path.join(__dirname, 'css', 'style.css'), 'utf8');
+const cssContent = fs.readFileSync(path.join(ROOT_DIR, 'css', 'style.css'), 'utf8');
 const has991 = cssContent.includes('@media (max-width: 991.98px)');
 const has576 = cssContent.includes('@media (max-width: 576px)');
 if (!has991 || !has576) {

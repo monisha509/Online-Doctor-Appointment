@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
+const ROOT_DIR = path.join(__dirname, '..');
+
 // Mock localStorage
 const store = {};
 global.localStorage = {
@@ -19,7 +21,8 @@ global.document = {
 };
 
 // Read script.js and run in global context
-const code = fs.readFileSync(path.join(__dirname, 'js', 'script.js'), 'utf8');
+const scriptPath = path.join(__dirname, 'script.js');
+const code = fs.readFileSync(scriptPath, 'utf8');
 vm.runInThisContext(code);
 
 console.log("=== Testing Healthcare System Core Logic ===");
@@ -58,7 +61,7 @@ DOCTORS_DATA.forEach(d => {
   imgPaths.add(d.img);
 
   // Check image exists on disk
-  const fullImg = path.join(__dirname, d.img);
+  const fullImg = path.join(ROOT_DIR, d.img);
   console.assert(fs.existsSync(fullImg), `Image file missing: ${d.img}`);
 });
 console.log(`[PASS] All ${ids.size} doctor IDs are unique.`);

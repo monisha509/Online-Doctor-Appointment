@@ -1,12 +1,13 @@
-
 // Test fetching Unsplash royalty-free medical portraits
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+const ROOT_DIR = path.join(__dirname, '..');
+
 // Test URL
 const url = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80';
-const dest = path.join(__dirname, 'images', 'test_doc.jpg');
+const dest = path.join(ROOT_DIR, 'images', 'test_doc.jpg');
 
 function download(u, target) {
   return new Promise((resolve, reject) => {
