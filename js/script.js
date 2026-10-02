@@ -1024,120 +1024,51 @@ async function handleLogout() {
 }
 
 // ============================================================================
-// 6. BACKEND REST API SERVICE MODULES
+// 6. FRONTEND PROTOTYPE SERVICE MODULES (PURE CLIENT-SIDE, ZERO BACKEND)
 // ============================================================================
 
 /**
- * Authentication Service
- * Endpoints:
- *   POST /api/v1/auth/login
- *   POST /api/v1/auth/logout
- *   GET  /api/v1/auth/me
+ * Authentication Service (Frontend Prototype)
+ * Manages prototype session state in sessionStorage and localStorage without external network calls.
  */
 const authService = {
-  async login(email, password, role) {
-    try {
-      const res = await fetch('/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        // Store authenticated session token and profile (NO PASSWORDS!)
-        setActiveSession({
-          ...data.user,
-          token: data.token
-        });
-        return { success: true, user: data.user, token: data.token };
-      }
-      return { success: false, error: data.error || 'Authentication failed' };
-    } catch (err) {
-      throw new Error("Authentication service is currently unavailable. Please ensure the backend server is running.");
-    }
-  },
-
-  async logout() {
-    try {
-      const session = getActiveSession();
-      if (session && session.token) {
-        await fetch('/api/v1/auth/logout', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-      }
-    } catch (e) {
-      // Continue clearing client session even if network drops
-    }
+  logout() {
     clearActiveSession();
   },
 
-  async getCurrentUser() {
-    const session = getActiveSession();
-    if (!session) return null;
-    if (session.token) {
-      try {
-        const res = await fetch('/api/v1/auth/me', {
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          return data.user;
-        }
-      } catch (e) {}
-    }
-    return session;
+  getCurrentUser() {
+    return getActiveSession();
   }
 };
 
 /**
- * Patient Service
- * Endpoints:
- *   GET   /api/v1/patient/appointments
- *   POST  /api/v1/appointments
- *   PATCH /api/v1/patient/appointments/:id/cancel
+ * Patient Service (Frontend Prototype)
+ * Handles client-side appointment retrieval, booking creation with duplicate-slot prevention,
+ * and cancellation in localStorage.
  */
 const patientService = {
   async getAppointments(patientId = null) {
-    const session = getActiveSession();
-    if (session && session.token) {
-      try {
-        const res = await fetch('/api/v1/patient/appointments', {
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          return data.appointments || [];
-        }
-      } catch (e) {
-        console.warn("Backend unavailable, checking fallback:", e);
-      }
-    }
     const list = getAppointments();
-    return list.filter(item => !patientId || item.patientId === patientId);
+    const session = getActiveSession();
+    return list.filter(item => {
+      if (!patientId && !session) return true;
+      const targetId = patientId || (session && (session.patientId || session.id));
+      const targetEmail = session && session.email;
+      return (item.patientId && item.patientId === targetId) ||
+             (item.patientEmail && targetEmail && item.patientEmail.toLowerCase() === targetEmail.toLowerCase()) ||
+             (item.email && targetEmail && item.email.toLowerCase() === targetEmail.toLowerCase());
+    });
   },
 
   async createBooking(bookingData) {
-    const session = getActiveSession();
-    if (session && session.token) {
-      const res = await fetch('/api/v1/appointments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.token}`
-        },
-        body: JSON.stringify(bookingData)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to register appointment');
-      }
-      return data.booking;
+    // Validate doctor selection
+    if (!bookingData.doctorId || !findDoctorById(bookingData.doctorId)) {
+      throw new Error("Please select a valid specialist from the directory.");
     }
 
-    // Local fallback check
+    // Check duplicate slot booking within local prototype data
     if (isSlotBooked(bookingData.doctorId, bookingData.appointmentDate, bookingData.timeSlot)) {
-      throw new Error(`Slot ${bookingData.timeSlot} on ${bookingData.appointmentDate} is already occupied.`);
+      throw new Error(`Slot ${bookingData.timeSlot} on ${bookingData.appointmentDate} is already occupied. Please select another time.`);
     }
 
     const bookingId = generateBookingId();
@@ -1155,18 +1086,6 @@ const patientService = {
   },
 
   async cancelBooking(bookingId) {
-    const session = getActiveSession();
-    if (session && session.token) {
-      try {
-        const res = await fetch(`/api/v1/patient/appointments/${encodeURIComponent(bookingId)}/cancel`, {
-          method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-        const data = await res.json();
-        if (res.ok && data.success) return true;
-      } catch (e) {}
-    }
-
     const all = getAppointments();
     let updated = false;
     const nextList = all.map(b => {
@@ -1186,66 +1105,24 @@ const patientService = {
 };
 
 /**
- * Consulting Physician Service
- * Endpoints:
- *   GET   /api/v1/physician/appointments
- *   GET   /api/v1/physician/appointments/:id
- *   PATCH /api/v1/physician/appointments/:id/status
+ * Consulting Physician Service (Frontend Prototype)
+ * Handles doctor-specific appointment filtering and consultation status updates in localStorage.
  */
 const physicianService = {
   async getAssignedAppointments(doctorId = null) {
     const session = getActiveSession();
-    if (session && session.token) {
-      try {
-        const res = await fetch('/api/v1/physician/appointments', {
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          return data.appointments || [];
-        }
-      } catch (e) {
-        console.warn("Backend unavailable, checking fallback:", e);
-      }
-    }
     const targetDocId = doctorId || (session ? session.doctorId : null);
     if (!targetDocId) return [];
-    return getAppointments().filter(item => item.doctorId === targetDocId);
+    const list = getAppointments();
+    return list.filter(item => item.doctorId === targetDocId);
   },
 
   async getAppointmentById(bookingId) {
-    const session = getActiveSession();
-    if (session && session.token) {
-      try {
-        const res = await fetch(`/api/v1/physician/appointments/${encodeURIComponent(bookingId)}`, {
-          headers: { 'Authorization': `Bearer ${session.token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          return data.appointment;
-        }
-      } catch (e) {}
-    }
-    return getAppointments().find(item => item.id === bookingId) || null;
+    const list = getAppointments();
+    return list.find(item => item.id === bookingId) || null;
   },
 
   async updateStatus(bookingId, doctorId, newStatus) {
-    const session = getActiveSession();
-    if (session && session.token) {
-      try {
-        const res = await fetch(`/api/v1/physician/appointments/${encodeURIComponent(bookingId)}/status`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.token}`
-          },
-          body: JSON.stringify({ status: newStatus })
-        });
-        const data = await res.json();
-        if (res.ok && data.success) return true;
-      } catch (e) {}
-    }
-
     const validStatuses = ["Scheduled", "Completed", "Cancelled"];
     if (!validStatuses.includes(newStatus)) {
       throw new Error(`Invalid status: ${newStatus}`);
@@ -1319,6 +1196,86 @@ function findDoctorByIdOrName(query) {
   const byId = findDoctorById(query);
   if (byId) return byId;
   return findDoctorByName(query);
+}
+
+/**
+ * Flexible Physician Matcher for Prototype Login
+ * Supports:
+ * 1. Doctor ID from registry (e.g. 'doc-001', 'DOC-001', 'doc001')
+ * 2. Exact email from registry (e.g. 'dr.johnsmith@healthcare.demo')
+ * 3. Email based on doctor's first name (e.g. 'john@gmail.com', 'ananya@yahoo.com')
+ * 4. Surname / full name email matching with ambiguity detection
+ *
+ * @param {string} input - Doctor ID or email string
+ * @returns {{ doctor?: object, error?: string }}
+ */
+function matchPhysicianIdentifier(input) {
+  if (!input || typeof input !== "string") {
+    return { error: "Please enter a Doctor ID or doctor email." };
+  }
+  const clean = input.trim().toLowerCase();
+  if (!clean) {
+    return { error: "Please enter a Doctor ID or doctor email." };
+  }
+
+  // 1. Exact Doctor ID match (e.g. "doc-001", "DOC-001")
+  const idMatch = DOCTORS_DATA.find(d => d.id.toLowerCase() === clean);
+  if (idMatch) return { doctor: idMatch };
+
+  // Alphanumeric ID match (e.g. "doc001")
+  const cleanAlphanum = clean.replace(/[^a-z0-9]/g, "");
+  const alphanumMatch = DOCTORS_DATA.find(d => d.id.replace(/[^a-z0-9]/g, "").toLowerCase() === cleanAlphanum);
+  if (alphanumMatch) return { doctor: alphanumMatch };
+
+  // 2. Exact registered email match
+  const exactEmail = DOCTORS_DATA.find(d => d.email && d.email.toLowerCase() === clean);
+  if (exactEmail) return { doctor: exactEmail };
+
+  // 3. Email based on doctor's first name (e.g., 'john@gmail.com', 'ananya@yahoo.com')
+  let queryName = clean;
+  if (clean.includes("@")) {
+    queryName = clean.split("@")[0]; // extract local-part
+  }
+  // Remove 'dr.' or 'dr_' prefix
+  queryName = queryName.replace(/^dr[\._\-]?/i, "").trim();
+
+  // If local part has dots/hyphens (e.g., 'john.smith'), extract first part
+  const firstNamePart = queryName.split(/[\._\-]/)[0];
+
+  // Match against first name of doctors
+  const firstNameMatches = DOCTORS_DATA.filter(d => {
+    const docFirstName = d.name.replace(/^Dr\.?\s+/i, "").split(" ")[0].toLowerCase();
+    return docFirstName === firstNamePart || docFirstName === queryName;
+  });
+
+  if (firstNameMatches.length > 1) {
+    return {
+      error: `Multiple physicians match the first name "${firstNamePart}". Please use your unique Doctor ID (e.g., ${firstNameMatches[0].id}) instead.`
+    };
+  }
+  if (firstNameMatches.length === 1) {
+    return { doctor: firstNameMatches[0] };
+  }
+
+  // Match against surname / full name
+  const surnameMatches = DOCTORS_DATA.filter(d => {
+    const docParts = d.name.toLowerCase().replace(/^dr\.?\s+/i, "").split(" ");
+    const docLastName = docParts[docParts.length - 1];
+    return docLastName === firstNamePart || docLastName === queryName;
+  });
+
+  if (surnameMatches.length > 1) {
+    return {
+      error: `Multiple physicians match "${firstNamePart}". Please use your unique Doctor ID (e.g., ${surnameMatches[0].id}) instead.`
+    };
+  }
+  if (surnameMatches.length === 1) {
+    return { doctor: surnameMatches[0] };
+  }
+
+  return {
+    error: `No physician found matching "${input}". Please enter a valid Doctor ID (e.g., doc-001) or doctor's first-name email.`
+  };
 }
 
 function getAllDepartments() {
@@ -1471,3 +1428,18 @@ document.addEventListener("DOMContentLoaded", function() {
   getAppointments(); // ensures initial seed
   syncPortalNavbar();
 });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    DOCTORS_DATA,
+    STANDARD_TIME_SLOTS,
+    findDoctorById,
+    findDoctorByName,
+    findDoctorByIdOrName,
+    matchPhysicianIdentifier,
+    getActiveSession,
+    setActiveSession,
+    clearActiveSession,
+    enforceRoleGuard
+  };
+}

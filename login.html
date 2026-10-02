@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal Access &amp; Sign In | HealthCare Portal</title>
-  
+
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  
+
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-  
+
   <!-- Custom Design System -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- Top Clinical Information Bar -->
@@ -27,7 +30,8 @@
         <span class="fw-semibold">HealthCare Outpatient Consultation &amp; Specialist Clinic Management</span>
       </div>
       <div>
-        <a href="home.html" class="text-white text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Back to Home</a>
+        <a href="home.html" class="text-white text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Back to
+          Home</a>
       </div>
     </div>
   </div>
@@ -37,7 +41,7 @@
       <div class="row justify-content-center">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
           <div class="login-card">
-        
+
             <div class="login-card-header">
               <div class="brand-icon-box mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
                 <i class="bi bi-heart-pulse-fill"></i>
@@ -48,13 +52,13 @@
 
             <div class="px-4 pb-4">
 
-              <!-- Security Information Note -->
+              <!-- Frontend Prototype Notice -->
               <div class="p-3 rounded-3 bg-light border mb-4">
                 <div class="d-flex align-items-start gap-2">
-                  <i class="bi bi-shield-check text-primary fs-5 mt-1"></i>
+                  <i class="bi bi-info-circle-fill text-primary fs-5 mt-1 flex-shrink-0"></i>
                   <div class="small text-secondary">
-                    <strong class="d-block text-navy">Secure Portal Authentication</strong>
-                    Credentials are authenticated server-side. Passwords are never stored on your device or browser storage.
+                    <strong class="d-block text-navy">Frontend Prototype</strong>
+                    Login does not verify identity. Use fictional data only.
                   </div>
                 </div>
               </div>
@@ -62,16 +66,16 @@
               <!-- URL Notice Alerts (e.g. redirect notices) -->
               <div id="urlNoticeBox" class="alert alert-warning py-2 small d-none mb-3" role="alert"></div>
 
-              <!-- Real Backend-Connected Authentication Form -->
-              <form id="portalLoginForm" onsubmit="return handleStandardLogin(event)" novalidate>
-                
+              <!-- Frontend-Only Prototype Authentication Form -->
+              <form id="portalLoginForm" onsubmit="return handleFrontendLogin(event)" novalidate>
+
                 <div id="loginFeedbackBox" class="alert d-none small mb-3" role="alert"></div>
 
                 <div class="mb-3">
-                  <label for="portalRoleSelect" class="form-label">
+                  <label for="portalRoleSelect" class="form-label fw-semibold">
                     <i class="bi bi-shield-lock me-1 text-primary"></i> Access Role <span class="text-danger">*</span>
                   </label>
-                  <select id="portalRoleSelect" class="form-select" required>
+                  <select id="portalRoleSelect" class="form-select" onchange="handleRoleChange(this.value)" required>
                     <option value="Patient" selected>Patient</option>
                     <option value="Physician">Consulting Physician</option>
                   </select>
@@ -79,21 +83,30 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="portalEmailInput" class="form-label">
-                    <i class="bi bi-envelope me-1 text-primary"></i> Email Address or Staff ID <span class="text-danger">*</span>
+                  <label for="portalEmailInput" id="portalIdentifierLabel" class="form-label fw-semibold">
+                    <i class="bi bi-envelope me-1 text-primary"></i> Email Address <span class="text-danger">*</span>
                   </label>
-                  <input type="email" id="portalEmailInput" class="form-control" placeholder="name@healthcare.demo" required autocomplete="username">
+                  <input type="text" id="portalEmailInput" class="form-control" placeholder="e.g. patient@example.com"
+                    required autocomplete="username">
+                  <div class="form-text small text-muted" id="portalIdentifierHelp">
+                    Enter any syntactically valid email address. No prior registration required.
+                  </div>
                 </div>
 
                 <div class="mb-3">
-                  <label for="portalPasswordInput" class="form-label mb-1">
+                  <label for="portalPasswordInput" class="form-label fw-semibold mb-1">
                     <i class="bi bi-key me-1 text-primary"></i> Password <span class="text-danger">*</span>
                   </label>
                   <div class="input-group">
-                    <input type="password" id="portalPasswordInput" class="form-control border-end-0" placeholder="••••••••" required autocomplete="current-password">
-                    <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                    <input type="password" id="portalPasswordInput" class="form-control border-end-0"
+                      placeholder="Enter any password" required autocomplete="current-password">
+                    <button class="btn btn-outline-secondary border-start-0" type="button"
+                      onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
                       <i class="bi bi-eye" id="togglePassIcon"></i>
                     </button>
+                  </div>
+                  <div class="form-text small text-muted">
+                    Enter any non-empty password. Passwords are never stored.
                   </div>
                 </div>
 
@@ -102,7 +115,7 @@
                   <span>Sign In</span>
                 </button>
 
-                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top small">
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top small">
                   <a href="doctors.html" class="text-primary text-decoration-none fw-semibold">
                     <i class="bi bi-people me-1"></i> Browse Doctors Directory
                   </a>
@@ -124,14 +137,14 @@
   <!-- FOOTER -->
   <footer class="footer-custom py-4">
     <div class="container text-center text-muted small">
-      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Role-Based Clinical Architecture</p>
-      <span>Authenticated Outpatient Services &bull; Powered by REST API (<code>/api/v1/auth</code>)</span>
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Frontend Prototype</p>
+      <span>Role-Based Outpatient Consultation &bull; Client-Side Architecture</span>
     </div>
   </footer>
 
   <!-- Bootstrap 5 Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  
+
   <!-- Master Application Logic -->
   <script src="js/script.js"></script>
 
@@ -148,10 +161,27 @@
       }
     }
 
-    // Real Backend Form Sign-In
-    async function handleStandardLogin(e) {
+    // Adjust labels and placeholders when role changes
+    function handleRoleChange(role) {
+      const label = document.getElementById("portalIdentifierLabel");
+      const input = document.getElementById("portalEmailInput");
+      const help = document.getElementById("portalIdentifierHelp");
+
+      if (role === "Physician") {
+        label.innerHTML = `<i class="bi bi-person-badge me-1 text-primary"></i> Doctor ID or Registered Email <span class="text-danger">*</span>`;
+        input.placeholder = "e.g. doc-001 or john@gmail.com";
+        help.textContent = "Enter your valid Doctor ID (e.g. doc-001) or email associated with a doctor in the registry.";
+      } else {
+        label.innerHTML = `<i class="bi bi-envelope me-1 text-primary"></i> Email Address <span class="text-danger">*</span>`;
+        input.placeholder = "e.g. patient@example.com";
+        help.textContent = "Enter any syntactically valid email address. No prior registration required.";
+      }
+    }
+
+    // Frontend-Only Prototype Form Sign-In
+    function handleFrontendLogin(e) {
       e.preventDefault();
-      const email = document.getElementById("portalEmailInput").value.trim().toLowerCase();
+      const rawInput = document.getElementById("portalEmailInput").value.trim();
       const role = document.getElementById("portalRoleSelect").value;
       const pass = document.getElementById("portalPasswordInput").value;
       const feedback = document.getElementById("loginFeedbackBox");
@@ -159,83 +189,133 @@
 
       feedback.className = "alert d-none small mb-3";
 
-      if (!email || !pass) {
+      // 1. Missing field validation
+      if (!rawInput && !pass) {
         feedback.className = "alert alert-danger py-2 small mb-3";
-        feedback.textContent = "Please provide both an email address/staff ID and a password.";
+        feedback.textContent = role === "Patient" 
+          ? "Please provide both an email address and a password." 
+          : "Please provide both a Doctor ID or email and a password.";
+        feedback.classList.remove("d-none");
+        return false;
+      }
+      if (!rawInput) {
+        feedback.className = "alert alert-danger py-2 small mb-3";
+        feedback.textContent = role === "Patient"
+          ? "Please enter an email address."
+          : "Please enter a Doctor ID or doctor email.";
+        feedback.classList.remove("d-none");
+        return false;
+      }
+      if (!pass) {
+        feedback.className = "alert alert-danger py-2 small mb-3";
+        feedback.textContent = "Please enter a password.";
         feedback.classList.remove("d-none");
         return false;
       }
 
-      // Loading state
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Authenticating...`;
-
-      try {
-        const result = await authService.login(email, pass, role);
-        if (result && result.success && result.user) {
-          feedback.className = "alert alert-success py-2 small mb-3";
-          feedback.textContent = `Authentication successful. Redirecting to ${role} Dashboard...`;
-          feedback.classList.remove("d-none");
-
-          setTimeout(() => {
-            if (result.user.role === "Patient") {
-              window.location.href = "patient-dashboard.html";
-            } else if (result.user.role === "Physician") {
-              window.location.href = "physician-dashboard.html";
-            }
-          }, 400);
-        } else {
+      // 2. Role: Patient
+      if (role === "Patient") {
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(rawInput)) {
           feedback.className = "alert alert-danger py-2 small mb-3";
-          feedback.textContent = (result && result.error) ? result.error : "Invalid credentials or unauthorized role access.";
+          feedback.textContent = "Please enter a valid email address format (e.g., patient@example.com).";
           feedback.classList.remove("d-none");
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i><span>Sign In</span>`;
+          return false;
         }
-      } catch (err) {
-        console.error("Login request failed:", err);
-        feedback.className = "alert alert-danger py-2 small mb-3";
-        feedback.textContent = "Authentication service is currently unavailable. Please ensure the backend server is running.";
+
+        // Derive clean patient name from email local part
+        const emailLower = rawInput.toLowerCase();
+        const localPart = emailLower.split("@")[0];
+        const derivedName = localPart
+          .split(/[\._\-]/)
+          .filter(Boolean)
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ") || "Patient User";
+
+        const hashVal = Math.abs(emailLower.split("").reduce((acc, c) => ((acc << 5) - acc) + c.charCodeAt(0), 0) % 90000) + 10000;
+        const patientUser = {
+          id: `usr-pat-${hashVal}`,
+          patientId: `pat-${hashVal}`,
+          name: derivedName,
+          email: emailLower,
+          role: "Patient",
+          phone: "+91 98401 00000"
+        };
+
+        // Store prototype session in sessionStorage & localStorage (NEVER STORE PASSWORDS)
+        setActiveSession(patientUser, true);
+
+        feedback.className = "alert alert-success py-2 small mb-3";
+        feedback.innerHTML = `<i class="bi bi-check-circle me-1"></i> Welcome, ${escapeHtml(derivedName)}! Navigating to Patient Dashboard...`;
         feedback.classList.remove("d-none");
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i><span>Sign In</span>`;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Opening Dashboard...`;
+
+        setTimeout(() => {
+          window.location.href = "patient-dashboard.html";
+        }, 300);
+        return false;
+      }
+
+      // 3. Role: Consulting Physician
+      if (role === "Physician") {
+        const matchResult = matchPhysicianIdentifier(rawInput);
+        if (matchResult.error) {
+          feedback.className = "alert alert-danger py-2 small mb-3";
+          feedback.textContent = matchResult.error;
+          feedback.classList.remove("d-none");
+          return false;
+        }
+
+        const matchedDoctor = matchResult.doctor;
+        const physicianUser = {
+          id: `usr-${matchedDoctor.id}`,
+          doctorId: matchedDoctor.id,
+          name: matchedDoctor.name,
+          email: matchedDoctor.email,
+          role: "Physician",
+          specialty: matchedDoctor.specialty,
+          phone: matchedDoctor.phone || "+91 98400 00000"
+        };
+
+        // Store prototype session in sessionStorage & localStorage (NEVER STORE PASSWORDS)
+        setActiveSession(physicianUser, true);
+
+        feedback.className = "alert alert-success py-2 small mb-3";
+        feedback.innerHTML = `<i class="bi bi-check-circle me-1"></i> Verified ${escapeHtml(matchedDoctor.name)} (${matchedDoctor.id}). Navigating to Physician Dashboard...`;
+        feedback.classList.remove("d-none");
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Opening Dashboard...`;
+
+        setTimeout(() => {
+          window.location.href = "physician-dashboard.html";
+        }, 300);
+        return false;
       }
 
       return false;
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       // Check query notices
       const params = new URLSearchParams(window.location.search);
       const notice = params.get("notice");
       const requiredRole = params.get("role");
       const noticeBox = document.getElementById("urlNoticeBox");
 
-      if (window.location.protocol === "file:") {
-        noticeBox.innerHTML = `
-          <div class="d-flex align-items-start gap-2">
-            <i class="bi bi-exclamation-triangle-fill text-warning fs-5 mt-1"></i>
-            <div>
-              <strong>Local Server Required:</strong> You opened this page directly as a local file (<code>file://</code>). Browser security prohibits API requests from <code>file://</code> URLs.
-              <div class="mt-1">
-                Please launch the backend server using <code>npm start</code> or <code>node server.js</code>, then navigate to <a href="http://localhost:3000/login.html" class="alert-link fw-bold">http://localhost:3000/login.html</a>.
-              </div>
-            </div>
-          </div>
-        `;
-        noticeBox.className = "alert alert-warning small mb-3";
-        noticeBox.classList.remove("d-none");
-        return;
-      }
-
       if (notice === "auth_required") {
         noticeBox.innerHTML = `
           <i class="bi bi-shield-lock me-1"></i>
-          <strong>Sign In Required:</strong> Please authenticate with your <strong>${escapeHtml(requiredRole || 'Portal')}</strong> credentials to access that section.
+          <strong>Sign In Required:</strong> Please sign in with your <strong>${escapeHtml(requiredRole || 'Portal')}</strong> credentials to access that section.
         `;
+        noticeBox.className = "alert alert-warning py-2 small mb-3";
         noticeBox.classList.remove("d-none");
       } else if (notice === "logged_out") {
         noticeBox.innerHTML = `
-          <i class="bi bi-check-circle me-1"></i> You have successfully signed out. Session invalidated.
+          <i class="bi bi-check-circle me-1"></i> You have successfully signed out. Prototype session cleared.
         `;
         noticeBox.className = "alert alert-success py-2 small mb-3";
         noticeBox.classList.remove("d-none");
@@ -243,4 +323,5 @@
     });
   </script>
 </body>
+
 </html>

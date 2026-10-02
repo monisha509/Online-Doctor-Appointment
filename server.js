@@ -28,7 +28,13 @@ try {
 }
 
 // Global Middlewares
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow all local origins (including 'null' for file:// protocol and localhost)
+    callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

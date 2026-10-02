@@ -278,9 +278,17 @@ function provisionAccounts() {
 }
 
 // User & Authentication Operations
-function authenticateUser(email, password, role) {
-  const stmt = db.prepare('SELECT * FROM users WHERE email = ? AND role = ?');
-  const user = stmt.get(email.toLowerCase(), role);
+function authenticateUser(identifier, password, role) {
+  if (!identifier || !password || !role) return null;
+  const cleanId = String(identifier).trim().toLowerCase();
+  const cleanRole = String(role).trim().toLowerCase();
+
+  const stmt = db.prepare(`
+    SELECT * FROM users 
+    WHERE (LOWER(email) = ? OR LOWER(COALESCE(doctor_id, '')) = ?) 
+      AND LOWER(role) = ?
+  `);
+  const user = stmt.get(cleanId, cleanId, cleanRole);
   if (!user) return null;
 
   const valid = verifyPassword(password, user.password_hash, user.salt);
