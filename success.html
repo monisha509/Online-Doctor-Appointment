@@ -1,24 +1,220 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Appointment Success</title>
-
-<link rel="stylesheet" href="css/style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Confirmed | HealthCare Hub</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
 
-<body class="success-bg">
+  <!-- Top Notice Bar (Hidden during print) -->
+  <div class="top-notice-bar no-print">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <img src="images/REC.png" alt="Rajalakshmi Engineering College" class="college-logo-img" style="height: 24px; filter: brightness(0) invert(1);">
+        <span class="fw-semibold">Rajalakshmi Engineering College &bull; Student Project Demonstration</span>
+      </div>
+      <div>
+        <a href="home.html" class="text-white text-decoration-none small"><i class="bi bi-house me-1"></i>Back to Home</a>
+      </div>
+    </div>
+  </div>
 
-<div class="success-box text-center">
+  <!-- Primary Sticky Navigation (Hidden during print) -->
+  <nav class="navbar navbar-expand-lg navbar-custom no-print">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="text-muted small" style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;">CLINIC APPOINTMENT SYSTEM</span>
+        </div>
+      </a>
 
-<h1>Appointment Booked Successfully</h1>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
 
-<a href="index.html" class="btn btn-warning mt-3">
-Back to Home
-</a>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="appointment.html"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
+          </li>
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically by js/script.js -->
+            <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>Demo Login</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-</div>
+  <main class="success-page-wrap">
+    <div class="container d-flex justify-content-center">
+      
+      <!-- APPOINTMENT CONFIRMATION VOUCHER CARD -->
+      <div class="voucher-card" id="voucherContainer">
+        
+        <div class="voucher-header">
+          <div class="voucher-check-icon">
+            <i class="bi bi-check-lg"></i>
+          </div>
+          <h2 class="fw-bold mb-1 text-white">Appointment Confirmed!</h2>
+          <p class="mb-0 text-white-50">Your outpatient consultation has been registered in the system.</p>
+        </div>
 
+        <!-- Appointment Details Section -->
+        <div class="p-4 bg-white" id="voucherContentBody">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Action Buttons (Hidden when printing) -->
+        <div class="p-4 bg-light d-flex flex-wrap justify-content-between align-items-center gap-2 no-print border-top">
+          <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i> Print Slip
+          </button>
+          <div class="d-flex gap-2">
+            <a href="appointment.html" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle me-1"></i> Book Another
+            </a>
+            <a href="home.html" class="btn btn-primary">
+              <i class="bi bi-house me-1"></i> Back to Home
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER (Hidden during print) -->
+  <footer class="footer-custom no-print">
+    <div class="container text-center text-muted small">
+      <p class="mb-1">&copy; 2026 HealthCare Appointment System &bull; Demonstration Environment</p>
+      <span>Rajalakshmi Engineering College &bull; Academic Portfolio Project</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const bookingId = params.get("bookingId");
+      const bookings = getAppointments();
+
+      let targetBooking = null;
+      if (bookingId) {
+        targetBooking = bookings.find(b => b.id === bookingId);
+      }
+      
+      // Fallback: load the most recent booking if none specified
+      if (!targetBooking && bookings.length > 0) {
+        targetBooking = bookings[bookings.length - 1];
+      }
+
+      const body = document.getElementById("voucherContentBody");
+
+      if (!targetBooking) {
+        body.innerHTML = `
+          <div class="text-center py-4">
+            <i class="bi bi-calendar-x text-muted fs-1 mb-2 d-block"></i>
+            <h5 class="fw-bold text-navy">No Appointment Record Found</h5>
+            <p class="text-muted small">We could not locate this booking reference in the demo storage.</p>
+            <a href="appointment.html" class="btn btn-primary btn-sm mt-2">Book a New Consultation</a>
+          </div>
+        `;
+        return;
+      }
+
+      body.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+          <div>
+            <span class="text-muted small d-block">Reference Code:</span>
+            <span class="fw-bold fs-5 font-monospace text-primary">${escapeHtml(targetBooking.id)}</span>
+          </div>
+          <div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6">
+              <i class="bi bi-check-circle-fill me-1"></i> ${escapeHtml(targetBooking.status || 'Confirmed')}
+            </span>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Patient Full Name</span>
+            <span class="fw-bold text-navy fs-6">${escapeHtml(targetBooking.patientName)}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Contact Number</span>
+            <span class="fw-semibold text-secondary">${escapeHtml(targetBooking.phone)}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Consulting Specialist</span>
+            <span class="fw-bold text-navy fs-6">${escapeHtml(targetBooking.doctorName)}</span>
+            <span class="badge bg-teal-light text-teal d-inline-block mt-1">${escapeHtml(targetBooking.specialty)}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Consultation Schedule</span>
+            <span class="fw-bold text-primary">
+              <i class="bi bi-calendar-check me-1"></i>${escapeHtml(targetBooking.appointmentDate)}
+            </span>
+            <span class="fw-bold text-navy d-block">
+              <i class="bi bi-clock me-1"></i>${escapeHtml(targetBooking.timeSlot)}
+            </span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-3 bg-light border mb-3">
+          <div class="d-flex justify-content-between small text-secondary mb-1">
+            <span>OPD Consultation Fee:</span>
+            <span class="fw-bold text-navy">₹${escapeHtml(String(targetBooking.fee || '500'))}</span>
+          </div>
+          <div class="d-flex justify-content-between small text-secondary">
+            <span>Hospital Clinic Location:</span>
+            <span class="fw-semibold text-navy">OPD Wing B, Campus Health Center</span>
+          </div>
+        </div>
+
+        <div class="alert alert-info py-2 px-3 small mb-0 d-flex gap-2">
+          <i class="bi bi-info-circle-fill fs-5 text-primary"></i>
+          <div>
+            <strong>Patient Instructions:</strong> Please arrive 10-15 minutes prior to your allocated slot. Present this digital slip or reference code at the registration desk.
+          </div>
+        </div>
+      `;
+    });
+  </script>
 </body>
 </html>

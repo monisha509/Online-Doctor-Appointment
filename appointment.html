@@ -1,51 +1,512 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Book Appointment</title>
-
-<link rel="stylesheet" href="css/style.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Doctor Appointment | HealthCare Hub</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
 
-<body class="apply-bg">
+  <!-- Top Academic / Demo Notice Bar -->
+  <div class="top-notice-bar">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <img src="images/REC.png" alt="Rajalakshmi Engineering College" class="college-logo-img" style="height: 24px; filter: brightness(0) invert(1);">
+        <span class="fw-semibold">Rajalakshmi Engineering College &bull; Student Project Demonstration</span>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-3">
+        <span><i class="bi bi-clock me-1"></i> OPD Hours: 8:00 AM - 8:00 PM</span>
+        <span><i class="bi bi-telephone me-1"></i> Helpline: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
 
-<div class="apply-form">
+  <!-- Primary Sticky Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="text-muted small" style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;">CLINIC APPOINTMENT SYSTEM</span>
+        </div>
+      </a>
 
-<h2 class="text-center">Appointment Form</h2>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
 
-<form action="success.html">
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="appointment.html"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
+          </li>
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically by js/script.js -->
+            <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>Demo Login</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<label>Doctor</label>
-<input id="doctorName" class="form-control mb-3" readonly>
+  <main class="booking-page-wrap">
+    <div class="container">
+      
+      <!-- Top header -->
+      <div class="text-center mb-4">
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 mb-2">
+          <i class="bi bi-shield-check me-1"></i> Real-time Consultation Reservation
+        </span>
+        <h1 class="fw-bold text-navy">Schedule Your Appointment</h1>
+        <p class="text-secondary mx-auto mb-0" style="max-width: 600px;">
+          Select your specialist, preferred appointment date, and available time slot. Your booking will be saved instantly.
+        </p>
+      </div>
 
-<input class="form-control mb-3" placeholder="Patient Name" required>
+      <div class="row g-4 justify-content-center">
+        <!-- LEFT COLUMN: BOOKING FORM -->
+        <div class="col-lg-7">
+          <div class="booking-card">
+            <div class="booking-card-header">
+              <h4 class="mb-1 text-white fw-bold"><i class="bi bi-clipboard2-pulse me-2"></i>Patient &amp; Consultation Details</h4>
+              <p class="mb-0 text-white-50 small">Fill out the patient details below to reserve your slot.</p>
+            </div>
 
-<input class="form-control mb-3" type="email" placeholder="Email" required>
+            <div class="p-4 p-md-5">
+              <div id="bookingAlertBox" class="alert d-none" role="alert"></div>
 
-<input class="form-control mb-3" placeholder="Contact Number" required>
+              <form id="appointmentForm" novalidate onsubmit="return handleAppointmentSubmit(event)">
+                
+                <!-- Doctor Selection -->
+                <div class="mb-4">
+                  <label for="doctorSelect" class="form-label">
+                    <i class="bi bi-person-badge me-1 text-primary"></i> Select Doctor / Specialist <span class="text-danger">*</span>
+                  </label>
+                  <select id="doctorSelect" class="form-select form-select-lg" required onchange="handleDoctorChange()">
+                    <!-- Options populated dynamically -->
+                  </select>
+                </div>
 
-<input class="form-control mb-3" type="date" required>
+                <!-- Patient Name -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label for="patientName" class="form-label">
+                      <i class="bi bi-person me-1 text-primary"></i> Patient Full Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="patientName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                    <div class="invalid-feedback">Please provide the patient's name.</div>
+                  </div>
 
-<button class="btn btn-success w-100">
-Confirm Appointment
-</button>
+                  <div class="col-md-6">
+                    <label for="patientPhone" class="form-label">
+                      <i class="bi bi-telephone me-1 text-primary"></i> Contact Phone Number <span class="text-danger">*</span>
+                    </label>
+                    <input type="tel" id="patientPhone" class="form-control" placeholder="e.g. +91 98401 23456" required>
+                    <div class="invalid-feedback">Please enter a valid phone number.</div>
+                  </div>
+                </div>
 
-</form>
+                <!-- Patient Email -->
+                <div class="mb-3">
+                  <label for="patientEmail" class="form-label">
+                    <i class="bi bi-envelope me-1 text-primary"></i> Email Address <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" id="patientEmail" class="form-control" placeholder="patient@example.com" required>
+                  <div class="invalid-feedback">Please provide a valid email for confirmation slip.</div>
+                </div>
 
-</div>
+                <!-- Appointment Date -->
+                <div class="mb-4">
+                  <label for="appointmentDate" class="form-label">
+                    <i class="bi bi-calendar-event me-1 text-primary"></i> Consultation Date <span class="text-danger">*</span>
+                  </label>
+                  <input type="date" id="appointmentDate" class="form-control" required onchange="handleDateOrDoctorChange()">
+                  <div class="form-text small text-muted"><i class="bi bi-info-circle me-1"></i>Past dates are locked. Please choose today or a future date.</div>
+                </div>
 
-<script>
+                <!-- Time Slot Grid -->
+                <div class="mb-4">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label mb-0">
+                      <i class="bi bi-clock me-1 text-primary"></i> Select Consultation Time Slot <span class="text-danger">*</span>
+                    </label>
+                    <span id="slotAvailabilityHint" class="badge bg-light text-muted border">Select date to check slots</span>
+                  </div>
 
-const params=new URLSearchParams(window.location.search)
+                  <div class="slot-grid" id="timeSlotContainer">
+                    <!-- Populated dynamically -->
+                  </div>
+                  <div id="slotErrorFeedback" class="text-danger small mt-2 d-none">
+                    Please select an available time slot.
+                  </div>
+                </div>
 
-const doctor=params.get("doctor")
+                <!-- Reason / Notes -->
+                <div class="mb-4">
+                  <label for="appointmentNotes" class="form-label">
+                    <i class="bi bi-chat-left-text me-1 text-primary"></i> Reason for Consultation / Symptoms (Optional)
+                  </label>
+                  <textarea id="appointmentNotes" class="form-control" rows="2" placeholder="Briefly describe symptoms, follow-up purpose, or specific health queries..."></textarea>
+                </div>
 
-document.getElementById("doctorName").value=doctor
+                <!-- Submission CTA -->
+                <button type="submit" id="btnSubmitBooking" class="btn-primary-custom w-100 py-3 fs-5">
+                  <i class="bi bi-check2-circle"></i>
+                  <span>Confirm &amp; Reserve Appointment</span>
+                </button>
 
-</script>
+                <p class="text-center text-muted small mt-3 mb-0">
+                  <i class="bi bi-lock-fill me-1"></i> Demo storage: No payment or sensitive info required.
+                </p>
 
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: DOCTOR SUMMARY & ESTIMATE -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-lg rounded-4 overflow-hidden position-sticky" style="top: 100px;">
+            <div class="p-4 bg-white border-bottom">
+              <span class="badge bg-teal-light text-teal fw-bold mb-2">Selected Specialist</span>
+              <div class="d-flex align-items-center gap-3">
+                <img id="summaryDoctorImg" src="images/doctor1.jpg" alt="Doctor" class="rounded-circle border" style="width: 70px; height: 70px; object-fit: cover;">
+                <div>
+                  <h5 id="summaryDoctorName" class="fw-bold mb-1 text-navy">Dr John Smith</h5>
+                  <div id="summaryDoctorSpecialty" class="text-teal small fw-semibold">Cardiology</div>
+                  <div id="summaryDoctorDegree" class="text-muted small">MBBS, MD</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 bg-light">
+              <h6 class="fw-bold text-navy mb-3"><i class="bi bi-receipt me-2"></i>Consultation Fee Estimate</h6>
+              
+              <div class="d-flex justify-content-between mb-2 small text-secondary">
+                <span>Doctor OPD Fee</span>
+                <span class="fw-bold" id="summaryBaseFee">₹700</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2 small text-secondary">
+                <span>Hospital Facility Fee</span>
+                <span class="text-success fw-bold">FREE (Demo)</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 small text-secondary">
+                <span>Digital Slip Generation</span>
+                <span class="text-success fw-bold">Included</span>
+              </div>
+              <hr class="my-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold text-navy">Total Demo Cost</span>
+                <span class="fw-bold fs-4 text-primary" id="summaryTotalFee">₹700</span>
+              </div>
+            </div>
+
+            <div class="p-4 bg-white">
+              <h6 class="fw-bold text-navy mb-2"><i class="bi bi-shield-check text-success me-2"></i>Booking Policies</h6>
+              <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span>Free cancellation from your "My Bookings" menu at any time.</span>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span>Digital appointment slip generated with unique reference code.</span>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span>Zero double-booking: Selected slot is locked immediately.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="brand-icon-box" style="width: 36px; height: 36px; font-size: 1.1rem;">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <span class="fw-bold fs-5 text-white">HealthCare Portal</span>
+          </div>
+          <p class="small text-secondary mb-3">
+            A comprehensive, patient-friendly outpatient appointment and doctor directory platform.
+          </p>
+          <div class="d-flex align-items-center gap-2">
+            <img src="images/REC.png" alt="REC Logo" style="height: 28px; filter: brightness(0) invert(1);">
+            <span class="small text-muted">Rajalakshmi Engineering College</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="doctors.html">Doctor Directory</a></li>
+            <li><a href="appointment.html">Book Appointment</a></li>
+            <li><a href="javascript:void(0)" onclick="openMyAppointmentsModal()">My Bookings</a></li>
+            <li><a href="login.html">Demo Login</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <h5>Hospital Desk</h5>
+          <p class="small text-muted mb-1"><i class="bi bi-telephone me-1"></i> OPD Helpline: +91 98765 43210</p>
+          <p class="small text-muted mb-1"><i class="bi bi-envelope me-1"></i> appointments@healthcare.org</p>
+          <p class="small text-muted"><i class="bi bi-clock me-1"></i> Mon - Sat: 8:00 AM - 8:00 PM</p>
+        </div>
+
+        <div class="col-lg-3">
+          <h5>Demo Storage</h5>
+          <p class="small text-secondary mb-2">
+            Appointments created here are saved directly to browser localStorage and can be viewed or cancelled on the spot.
+          </p>
+          <div class="badge bg-secondary-subtle text-secondary border">Local Persistence Active</div>
+        </div>
+      </div>
+
+      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <p class="mb-0 text-muted small">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
+        <div class="d-flex gap-3 small text-muted">
+          <span>Demonstration Environment</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
+
+  <script>
+    let selectedDoctor = null;
+
+    function initDoctorDropdown(preselectedDoctorName) {
+      const select = document.getElementById("doctorSelect");
+      select.innerHTML = "";
+
+      DOCTORS_DATA.forEach(doc => {
+        const opt = document.createElement("option");
+        opt.value = doc.name;
+        opt.textContent = `${doc.name} (${doc.specialty}) — ₹${doc.fee}`;
+        if (preselectedDoctorName && doc.name.toLowerCase() === preselectedDoctorName.toLowerCase()) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
+
+      handleDoctorChange();
+    }
+
+    function handleDoctorChange() {
+      const select = document.getElementById("doctorSelect");
+      const doc = findDoctorByName(select.value) || DOCTORS_DATA[0];
+      selectedDoctor = doc;
+
+      // Update right-hand summary card
+      document.getElementById("summaryDoctorImg").src = doc.img;
+      document.getElementById("summaryDoctorName").textContent = doc.name;
+      document.getElementById("summaryDoctorSpecialty").textContent = doc.specialty;
+      document.getElementById("summaryDoctorDegree").textContent = doc.qualification;
+      document.getElementById("summaryBaseFee").textContent = `₹${doc.fee}`;
+      document.getElementById("summaryTotalFee").textContent = `₹${doc.fee}`;
+
+      renderTimeSlots();
+    }
+
+    function handleDateOrDoctorChange() {
+      renderTimeSlots();
+    }
+
+    function renderTimeSlots() {
+      const container = document.getElementById("timeSlotContainer");
+      const dateVal = document.getElementById("appointmentDate").value;
+      const hint = document.getElementById("slotAvailabilityHint");
+      container.innerHTML = "";
+
+      if (!selectedDoctor) return;
+
+      if (!dateVal) {
+        hint.textContent = "Please pick a date first";
+        hint.className = "badge bg-warning-subtle text-warning border border-warning-subtle";
+        return;
+      }
+
+      hint.textContent = `Checking slots for ${dateVal}`;
+      hint.className = "badge bg-info-subtle text-info border border-info-subtle";
+
+      let availableCount = 0;
+
+      STANDARD_TIME_SLOTS.forEach((slot, idx) => {
+        const isBooked = isSlotBooked(selectedDoctor.name, dateVal, slot);
+        if (!isBooked) availableCount++;
+
+        const item = document.createElement("div");
+        item.className = `slot-item ${isBooked ? 'disabled' : ''}`;
+        
+        item.innerHTML = `
+          <input type="radio" name="timeSlot" id="slot_${idx}" value="${escapeHtml(slot)}" ${isBooked ? 'disabled' : ''} onchange="document.getElementById('slotErrorFeedback').classList.add('d-none')">
+          <label class="slot-btn" for="slot_${idx}" title="${isBooked ? 'Slot already reserved' : 'Available'}">
+            ${escapeHtml(slot)}
+            ${isBooked ? '<span class="d-block" style="font-size: 0.65rem;">(Booked)</span>' : ''}
+          </label>
+        `;
+
+        container.appendChild(item);
+      });
+
+      hint.textContent = `${availableCount} of ${STANDARD_TIME_SLOTS.length} Slots Available`;
+      hint.className = availableCount > 0 ? "badge bg-success-subtle text-success border border-success-subtle" : "badge bg-danger-subtle text-danger border border-danger-subtle";
+    }
+
+    function handleAppointmentSubmit(event) {
+      event.preventDefault();
+      const form = document.getElementById("appointmentForm");
+      const alertBox = document.getElementById("bookingAlertBox");
+      const slotFeedback = document.getElementById("slotErrorFeedback");
+
+      // Validate inputs
+      const patientName = document.getElementById("patientName").value.trim();
+      const patientPhone = document.getElementById("patientPhone").value.trim();
+      const patientEmail = document.getElementById("patientEmail").value.trim();
+      const appointmentDate = document.getElementById("appointmentDate").value;
+      const notes = document.getElementById("appointmentNotes").value.trim();
+
+      const selectedSlotRadio = document.querySelector('input[name="timeSlot"]:checked');
+
+      if (!patientName || !patientPhone || !patientEmail || !appointmentDate) {
+        form.classList.add("was-validated");
+        showAlert("Please fill in all mandatory fields correctly.", "danger");
+        return false;
+      }
+
+      if (!selectedSlotRadio) {
+        slotFeedback.classList.remove("d-none");
+        showAlert("Please choose an available consultation time slot.", "warning");
+        return false;
+      }
+
+      const timeSlot = selectedSlotRadio.value;
+
+      // Validate date is not in the past
+      const today = getTodayDateString();
+      if (appointmentDate < today) {
+        showAlert("Appointment date cannot be in the past. Please select today or a future date.", "danger");
+        return false;
+      }
+
+      // Check duplicate booking in storage
+      if (isSlotBooked(selectedDoctor.name, appointmentDate, timeSlot)) {
+        showAlert(`Slot ${timeSlot} on ${appointmentDate} with ${selectedDoctor.name} has just been reserved. Please pick another slot.`, "danger");
+        renderTimeSlots();
+        return false;
+      }
+
+      // Save appointment to localStorage
+      const bookingId = generateBookingId();
+      const newBooking = {
+        id: bookingId,
+        patientName: patientName,
+        phone: patientPhone,
+        email: patientEmail,
+        doctorName: selectedDoctor.name,
+        specialty: selectedDoctor.specialty,
+        appointmentDate: appointmentDate,
+        timeSlot: timeSlot,
+        fee: selectedDoctor.fee,
+        notes: notes,
+        status: "Confirmed",
+        createdAt: new Date().toISOString()
+      };
+
+      const allBookings = getAppointments();
+      allBookings.push(newBooking);
+      saveAppointments(allBookings);
+
+      // Feedback & Redirection to success.html with booking ID
+      showAlert("Appointment confirmed! Redirecting to confirmation slip...", "success");
+      
+      const submitBtn = document.getElementById("btnSubmitBooking");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Generating Slip...`;
+
+      setTimeout(() => {
+        window.location.href = `success.html?bookingId=${encodeURIComponent(bookingId)}`;
+      }, 700);
+
+      return false;
+    }
+
+    function showAlert(msg, type) {
+      const alertBox = document.getElementById("bookingAlertBox");
+      alertBox.className = `alert alert-${type} alert-dismissible fade show`;
+      alertBox.innerHTML = `
+        <div class="d-flex align-items-center">
+          <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+          <div>${escapeHtml(msg)}</div>
+        </div>
+      `;
+      alertBox.classList.remove("d-none");
+      alertBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // 1. Set min date to today
+      const dateInput = document.getElementById("appointmentDate");
+      const todayStr = getTodayDateString();
+      dateInput.min = todayStr;
+      dateInput.value = todayStr; // default to today
+
+      // 2. Pre-fill demo user if logged in
+      const activeUser = getActiveUser();
+      if (activeUser && activeUser.username) {
+        document.getElementById("patientName").value = activeUser.username;
+        if (activeUser.email) document.getElementById("patientEmail").value = activeUser.email;
+        if (activeUser.phone) document.getElementById("patientPhone").value = activeUser.phone;
+      }
+
+      // 3. Inspect URL query for doctor parameter
+      const params = new URLSearchParams(window.location.search);
+      const preselectedDoctor = params.get("doctor");
+
+      initDoctorDropdown(preselectedDoctor);
+    });
+  </script>
 </body>
 </html>

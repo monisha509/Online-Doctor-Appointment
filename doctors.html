@@ -1,87 +1,335 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Doctors</title>
-
-<link rel="stylesheet" href="css/style.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specialist Doctor Directory | HealthCare Hub</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
 
-<body class="jobs-bg">
+  <!-- Top Academic / Demo Notice Bar -->
+  <div class="top-notice-bar">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <img src="images/REC.png" alt="Rajalakshmi Engineering College" class="college-logo-img" style="height: 24px; filter: brightness(0) invert(1);">
+        <span class="fw-semibold">Rajalakshmi Engineering College &bull; Student Project Demonstration</span>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-3">
+        <span><i class="bi bi-clock me-1"></i> OPD Hours: 8:00 AM - 8:00 PM</span>
+        <span><i class="bi bi-telephone me-1"></i> Helpline: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
 
-<nav class="navbar navbar-dark bg-dark">
+  <!-- Primary Sticky Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="text-muted small" style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;">CLINIC APPOINTMENT SYSTEM</span>
+        </div>
+      </a>
 
-<div class="container">
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
 
-<a class="navbar-brand">HealthCare</a>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="appointment.html"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
+          </li>
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically by js/script.js -->
+            <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>Demo Login</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<a href="index.html" class="btn btn-light">Home</a>
+  <main class="py-5" style="background-color: var(--bg-page);">
+    <div class="container">
+      
+      <!-- PAGE HEADER -->
+      <div class="text-center mb-4">
+        <span class="section-tag">Clinical Faculty</span>
+        <h1 class="fw-bold text-navy">Meet Our Specialist Physicians</h1>
+        <p class="text-secondary mx-auto" style="max-width: 650px;">
+          Explore verified medical consultants, check consultation schedules, and book confirmed outpatient slots directly.
+        </p>
+      </div>
 
-</div>
+      <!-- FILTER & SEARCH PANEL -->
+      <div class="filter-container">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-7">
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" id="doctorSearchInput" class="form-control border-start-0" placeholder="Search doctor by name, qualification, or specialty..." aria-label="Search doctor">
+            </div>
+          </div>
+          <div class="col-md-5 text-md-end">
+            <span class="text-muted small me-2">Showing:</span>
+            <span id="doctorCountBadge" class="badge bg-primary px-3 py-2 fs-6">11 Doctors</span>
+          </div>
+        </div>
 
-</nav>
+        <div class="filter-pills" id="specialtyFilterPills">
+          <button class="filter-btn active" data-filter="all">All Specialties</button>
+          <button class="filter-btn" data-filter="Cardiology">Cardiology</button>
+          <button class="filter-btn" data-filter="General Medicine">General Medicine</button>
+          <button class="filter-btn" data-filter="Orthopedics">Orthopedics</button>
+          <button class="filter-btn" data-filter="Pediatrics">Pediatrics</button>
+          <button class="filter-btn" data-filter="Dermatology">Dermatology</button>
+          <button class="filter-btn" data-filter="Neurology">Neurology</button>
+          <button class="filter-btn" data-filter="Obstetrics & Gynecology">Gynecology</button>
+          <button class="filter-btn" data-filter="ENT Specialist">ENT</button>
+          <button class="filter-btn" data-filter="Ophthalmology">Eye Care</button>
+          <button class="filter-btn" data-filter="Dental Surgery">Dental</button>
+          <button class="filter-btn" data-filter="Psychiatry">Psychiatry</button>
+        </div>
+      </div>
 
-<div class="container mt-4">
+      <!-- DOCTOR CARDS GRID -->
+      <div class="row g-4" id="doctorContainer">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
 
-<h2 class="text-center text-white">Our Doctors</h2>
+      <!-- NO DOCTORS FOUND EMPTY STATE -->
+      <div id="noDoctorsState" class="text-center py-5 d-none">
+        <div class="p-4 bg-white rounded-4 shadow-sm d-inline-block" style="max-width: 450px;">
+          <i class="bi bi-search text-muted fs-1 mb-3 d-block"></i>
+          <h4 class="fw-bold text-navy">No Doctors Found</h4>
+          <p class="text-muted small">We couldn't find any specialist matching your current search query or filter.</p>
+          <button class="btn btn-outline-primary btn-sm" onclick="resetDoctorFilters()">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+          </button>
+        </div>
+      </div>
 
-<div class="row" id="doctorContainer"></div>
+    </div>
+  </main>
 
-</div>
+  <!-- FOOTER -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="brand-icon-box" style="width: 36px; height: 36px; font-size: 1.1rem;">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <span class="fw-bold fs-5 text-white">HealthCare Portal</span>
+          </div>
+          <p class="small text-secondary mb-3">
+            A comprehensive, patient-friendly outpatient appointment and doctor directory platform.
+          </p>
+          <div class="d-flex align-items-center gap-2">
+            <img src="images/REC.png" alt="REC Logo" style="height: 28px; filter: brightness(0) invert(1);">
+            <span class="small text-muted">Rajalakshmi Engineering College</span>
+          </div>
+        </div>
 
-<script>
+        <div class="col-6 col-lg-2">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="doctors.html">Doctor Directory</a></li>
+            <li><a href="appointment.html">Book Appointment</a></li>
+            <li><a href="javascript:void(0)" onclick="openMyAppointmentsModal()">My Bookings</a></li>
+            <li><a href="login.html">Demo Login</a></li>
+          </ul>
+        </div>
 
-let doctors=[
+        <div class="col-6 col-lg-3">
+          <h5>Helpdesk</h5>
+          <p class="small text-muted mb-1"><i class="bi bi-geo-alt me-1"></i> Thandalam, Chennai, Tamil Nadu</p>
+          <p class="small text-muted mb-1"><i class="bi bi-telephone me-1"></i> +91 98765 43210</p>
+          <p class="small text-muted"><i class="bi bi-envelope me-1"></i> appointments@healthcare.org</p>
+        </div>
 
-{name:"Dr John Smith",img:"images/doctor1.jpg"},
-{name:"Dr David Wilson",img:"images/doctor2.jpg"},
-{name:"Dr Michael Brown",img:"images/doctor3.jpg"},
-{name:"Dr Robert Miller",img:"images/doctor4.jpg"},
-{name:"Dr James Anderson",img:"images/doctor5.jpg"},
+        <div class="col-lg-3">
+          <h5>Demonstration Note</h5>
+          <p class="small text-secondary mb-2">
+            Consultation fees and availability schedules are sample configurations for this college demonstration system.
+          </p>
+          <div class="badge bg-secondary-subtle text-secondary border">Educational Portfolio Project</div>
+        </div>
+      </div>
 
-{name:"Dr Emily Clark",img:"images/doctor6.jpg"},
-{name:"Dr Olivia Davis",img:"images/doctor7.jpg"},
-{name:"Dr Sophia Taylor",img:"images/doctor8.jpg"},
-{name:"Dr Ava Martinez",img:"images/doctor9.jpg"},
-{name:"Dr Isabella Thomas",img:"images/doctor10.jpg"},
-{name:"Dr Mia White",img:"images/doctor11.jpg"}
+      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <p class="mb-0 text-muted small">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
+        <div class="d-flex gap-3 small text-muted">
+          <span>Preserving original 11 doctor profiles with enhanced attributes</span>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-];
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
 
-let container=document.getElementById("doctorContainer")
+  <script>
+    // Doctor Filtering Logic
+    let currentFilter = "all";
+    let searchQuery = "";
 
-for(let i=0;i<doctors.length;i++){
+    function renderDoctors() {
+      const container = document.getElementById("doctorContainer");
+      const emptyState = document.getElementById("noDoctorsState");
+      const countBadge = document.getElementById("doctorCountBadge");
 
-container.innerHTML+=`
+      const filtered = DOCTORS_DATA.filter(doc => {
+        const matchesCategory = (currentFilter === "all") || 
+          doc.specialty.toLowerCase().includes(currentFilter.toLowerCase());
+        
+        const q = searchQuery.toLowerCase();
+        const matchesSearch = !q || 
+          doc.name.toLowerCase().includes(q) ||
+          doc.specialty.toLowerCase().includes(q) ||
+          doc.qualification.toLowerCase().includes(q) ||
+          doc.bio.toLowerCase().includes(q);
 
-<div class="col-md-4">
+        return matchesCategory && matchesSearch;
+      });
 
-<div class="card job-card">
+      countBadge.textContent = `${filtered.length} Doctor${filtered.length === 1 ? '' : 's'}`;
 
-<img src="${doctors[i].img}" class="card-img-top">
+      if (filtered.length === 0) {
+        container.innerHTML = "";
+        emptyState.classList.remove("d-none");
+        return;
+      }
 
-<div class="card-body text-center">
+      emptyState.classList.add("d-none");
+      
+      let html = "";
+      filtered.forEach(doc => {
+        html += `
+          <div class="col-md-6 col-lg-4">
+            <div class="doctor-card">
+              <div class="doctor-image-wrapper">
+                <img src="${escapeHtml(doc.img)}" alt="${escapeHtml(doc.name)}" loading="lazy">
+                <span class="badge-specialty">${escapeHtml(doc.specialty)}</span>
+                <span class="badge-availability">OPD Active</span>
+              </div>
+              <div class="doctor-card-body">
+                <h5 class="doctor-card-title">${escapeHtml(doc.name)}</h5>
+                <div class="doctor-specialty-text">${escapeHtml(doc.qualification)}</div>
+                
+                <p class="text-muted small mb-3 flex-grow-1" style="min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                  ${escapeHtml(doc.bio)}
+                </p>
 
-<h5>${doctors[i].name}</h5>
+                <div class="doctor-meta-grid">
+                  <div class="doctor-meta-item">
+                    <span class="doctor-meta-label">Experience</span>
+                    <span class="doctor-meta-value">${escapeHtml(doc.experience)}</span>
+                  </div>
+                  <div class="doctor-meta-item">
+                    <span class="doctor-meta-label">Consultation Fee</span>
+                    <span class="doctor-meta-value text-primary">₹${escapeHtml(String(doc.fee))}</span>
+                  </div>
+                </div>
 
-<a href="appointment.html?doctor=${doctors[i].name}" class="btn btn-primary">
-Book Appointment
-</a>
+                <div class="text-muted small mb-3">
+                  <i class="bi bi-clock me-1 text-teal"></i>
+                  <span>${escapeHtml(doc.availability)}</span>
+                </div>
 
-</div>
+                <a href="appointment.html?doctor=${encodeURIComponent(doc.name)}" class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+                  <i class="bi bi-calendar-check"></i>
+                  <span>Book Appointment</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      });
 
-</div>
+      container.innerHTML = html;
+    }
 
-</div>
+    function resetDoctorFilters() {
+      currentFilter = "all";
+      searchQuery = "";
+      document.getElementById("doctorSearchInput").value = "";
+      
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-filter") === "all");
+      });
 
-`
+      renderDoctors();
+    }
 
-}
+    document.addEventListener("DOMContentLoaded", function() {
+      // Check URL parameters for preset filter
+      const params = new URLSearchParams(window.location.search);
+      const initialFilter = params.get("filter");
+      if (initialFilter) {
+        currentFilter = initialFilter;
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+          if (btn.getAttribute("data-filter").toLowerCase() === initialFilter.toLowerCase()) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
 
-</script>
+      // Filter pill click listeners
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+          currentFilter = this.getAttribute("data-filter");
+          renderDoctors();
+        });
+      });
 
+      // Search input listener
+      const searchInput = document.getElementById("doctorSearchInput");
+      searchInput.addEventListener("input", function(e) {
+        searchQuery = e.target.value.trim();
+        renderDoctors();
+      });
+
+      renderDoctors();
+    });
+  </script>
 </body>
 </html>

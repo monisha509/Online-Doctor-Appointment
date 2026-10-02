@@ -1,55 +1,430 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>Online Doctor Appointment System</title>
-
-<link rel="stylesheet" href="css/style.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthCare Hub | Doctor Appointment & Healthcare Management</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
 
-<body class="index-bg">
+  <!-- Top Academic / Demo Notice Bar -->
+  <div class="top-notice-bar">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <img src="images/REC.png" alt="Rajalakshmi Engineering College" class="college-logo-img" style="height: 24px; filter: brightness(0) invert(1);">
+        <span class="fw-semibold">Rajalakshmi Engineering College &bull; Student Project Demonstration</span>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-3">
+        <span><i class="bi bi-clock me-1"></i> OPD Hours: 8:00 AM - 8:00 PM</span>
+        <span><i class="bi bi-telephone me-1"></i> Helpline: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-<div class="container">
-<a class="navbar-brand">HealthCare</a>
-<div>
-<a href="home.html" class="nav-link d-inline text-white me-3">Home</a>
-<a href="doctors.html" class="nav-link d-inline text-white">Doctors</a>
-</div>
-</div>
-</nav>
+  <!-- Primary Sticky Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="home.html">
+        <div class="brand-icon-box">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fw-bold fs-4 lh-1 text-navy">Health<span class="text-primary">Care</span></span>
+          <span class="text-muted small" style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;">CLINIC APPOINTMENT SYSTEM</span>
+        </div>
+      </a>
 
-<!-- TITLE SECTION -->
-<div class="container text-center mt-5 text-white">
-<h1>Online Doctor Appointment System</h1>
-<br><br>
-<a href="doctors.html" class="btn btn-warning btn-lg">View Doctors</a>
-</div>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2 text-primary"></i>
+      </button>
 
-<!-- ABOUT HEALTHCARE -->
-<div class="container mt-5 text-black">
-<h2>About HealthCare</h2>
-<p>
-HealthCare Hospital provides high-quality medical services with experienced doctors and modern medical facilities.
-Patients can easily book appointments online, view doctor profiles, and select suitable consultation times.
-Our goal is to make healthcare accessible, convenient, and efficient for everyone.
-This online appointment system helps reduce waiting time and improves patient care.
-</p>
-</div>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="home.html"><i class="bi bi-house-door me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="doctors.html"><i class="bi bi-person-lines-fill me-1"></i>Find Doctors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="appointment.html"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" onclick="openMyAppointmentsModal()"><i class="bi bi-journal-bookmark me-1"></i>My Bookings</a>
+          </li>
+          <li class="nav-item ms-lg-2" id="navbarUserSlot">
+            <!-- Populated dynamically by js/script.js -->
+            <a href="login.html" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>Demo Login</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<!-- CONTACT INFORMATION -->
-<div class="container mt-4 mb-5 text-black">
-<h2>Contact Information</h2>
-<p>Email : healthcare@hospital.com</p>
-<p>Phone : +91 9876543210</p>
-<p>Emergency : +91 9123456789</p>
-<p>Location : Chennai, Tamil Nadu, India</p>
-</div>
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="container hero-content">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7">
+            <div class="hero-badge">
+              <i class="bi bi-check-circle-fill text-teal"></i>
+              <span>Seamless Outpatient Consultation Scheduling</span>
+            </div>
+            <h1 class="hero-title">
+              Quality Healthcare, <span>Accessible &amp; Fast</span> for Every Patient
+            </h1>
+            <p class="hero-desc">
+              Schedule appointments with verified specialist physicians, select convenient time slots, and manage your consultations in seconds. Built for high reliability and patient peace of mind.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mb-4">
+              <a href="appointment.html" class="btn-primary-custom">
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Book an Appointment</span>
+              </a>
+              <a href="doctors.html" class="btn-outline-custom">
+                <i class="bi bi-people-fill"></i>
+                <span>Explore Doctors (11)</span>
+              </a>
+            </div>
+            
+            <div class="d-flex flex-wrap align-items-center gap-4 pt-3 text-muted small">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-shield-fill-check text-success fs-5"></i>
+                <span>Pre-Validated Time Slots</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-clock-history text-primary fs-5"></i>
+                <span>Zero Double-Booking</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-printer text-teal fs-5"></i>
+                <span>Printable Digital Slips</span>
+              </div>
+            </div>
+          </div>
 
+          <div class="col-lg-5">
+            <div class="hero-stats-card">
+              <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                <h5 class="mb-0 fw-bold text-navy">Live Hospital Status</h5>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">OPD Active</span>
+              </div>
+
+              <div class="row g-3 text-center mb-4">
+                <div class="col-6">
+                  <div class="p-3 rounded bg-light border">
+                    <h3 class="fw-bold text-primary mb-1">11+</h3>
+                    <span class="text-muted small">Specialist Doctors</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-3 rounded bg-light border">
+                    <h3 class="fw-bold text-teal mb-1">8</h3>
+                    <span class="text-muted small">Clinical Departments</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-3 rounded bg-light border">
+                    <h3 class="fw-bold text-navy mb-1">100%</h3>
+                    <span class="text-muted small">Digital Scheduling</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-3 rounded bg-light border">
+                    <h3 class="fw-bold text-success mb-1">&lt; 2 min</h3>
+                    <span class="text-muted small">Booking Process</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-light border small text-muted mb-0 d-flex gap-2 align-items-start">
+                <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+                <span>Looking for your scheduled appointment? Check <a href="javascript:void(0)" onclick="openMyAppointmentsModal()" class="fw-bold text-primary">My Bookings</a> at any time to review or cancel.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY HEALTHCARE SERVICES -->
+    <section class="py-5" style="background-color: var(--bg-surface);">
+      <div class="container py-4">
+        <div class="section-header">
+          <span class="section-tag">Clinical Departments</span>
+          <h2 class="section-title">Specialized Care Across All Major Fields</h2>
+          <p class="text-secondary mt-2">Comprehensive outpatient services delivered by experienced doctors committed to excellence.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Cardiology</h4>
+              <p class="text-muted small mb-4">Comprehensive cardiac assessment, ECG interpretation, preventive heart screening, and hypertension management.</p>
+              <a href="doctors.html?filter=Cardiology" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Cardiologists <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box" style="background:#e0f2fe; color:#0284c7;">
+                <i class="bi bi-capsule"></i>
+              </div>
+              <h4 class="fw-bold mb-2">General Medicine</h4>
+              <p class="text-muted small mb-4">Expert diagnosis and medical intervention for acute illnesses, seasonal flu, lifestyle disorders, and routine checkups.</p>
+              <a href="doctors.html?filter=General Medicine" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Physicians <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box" style="background:#ccfbf1; color:#0d9488;">
+                <i class="bi bi-emoji-smile"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Pediatrics</h4>
+              <p class="text-muted small mb-4">Compassionate child healthcare, immunization tracking, growth monitoring, and pediatric infectious disease care.</p>
+              <a href="doctors.html?filter=Pediatrics" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Pediatricians <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box" style="background:#fef3c7; color:#d97706;">
+                <i class="bi bi-person-wheelchair"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Orthopedics</h4>
+              <p class="text-muted small mb-4">Bone, ligament, and joint specialists addressing arthritis, sports injuries, fractures, and rehabilitation therapy.</p>
+              <a href="doctors.html?filter=Orthopedics" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Orthopedicians <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box" style="background:#fee2e2; color:#ef4444;">
+                <i class="bi bi-bandaid"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Dermatology</h4>
+              <p class="text-muted small mb-4">Scientific skin, hair, and nail health solutions, allergic conditions, acne treatment, and diagnostic dermoscopy.</p>
+              <a href="doctors.html?filter=Dermatology" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Dermatologists <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="service-card">
+              <div class="service-icon-box" style="background:#ede9fe; color:#7c3aed;">
+                <i class="bi bi-activity"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Neurology</h4>
+              <p class="text-muted small mb-4">Specialized diagnosis of neuropathies, recurring migraine, sleep disturbances, and neuro-muscular evaluation.</p>
+              <a href="doctors.html?filter=Neurology" class="text-primary fw-bold small text-decoration-none mt-auto">
+                Consult Neurologists <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="py-5" style="background-color: var(--bg-page);">
+      <div class="container py-4">
+        <div class="section-header">
+          <span class="section-tag">Booking Process</span>
+          <h2 class="section-title">How To Schedule In 3 Simple Steps</h2>
+          <p class="text-secondary mt-2">Skip traditional clinic wait times with transparent slot reservation.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="step-card">
+              <div class="step-number">1</div>
+              <h4 class="fw-bold mb-2">Select a Doctor</h4>
+              <p class="text-muted small">Browse through verified doctors, filter by specialization, consultation fees, and available days.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step-card">
+              <div class="step-number" style="background:var(--primary-blue);">2</div>
+              <h4 class="fw-bold mb-2">Pick Date &amp; Slot</h4>
+              <p class="text-muted small">Choose an available appointment date and a dedicated time slot that fits your personal schedule.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step-card">
+              <div class="step-number" style="background:var(--teal-accent);">3</div>
+              <h4 class="fw-bold mb-2">Get Instant Slip</h4>
+              <p class="text-muted small">Receive immediate digital confirmation with your unique booking reference ID and printable receipt.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <a href="appointment.html" class="btn-primary-custom">
+            <i class="bi bi-arrow-right-circle me-1"></i> Start Booking Now
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT & CONTACT SECTION -->
+    <section class="py-5" style="background-color: #ffffff;">
+      <div class="container py-4">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <span class="section-tag">About The System</span>
+            <h2 class="fw-bold text-navy mb-3">Accessible Healthcare Management for Modern Patients</h2>
+            <p class="text-secondary">
+              This online doctor appointment management portal streamlines outpatient flow, minimizes in-clinic waiting room crowding, and ensures every patient can reserve a dedicated consultation time with their preferred specialist.
+            </p>
+            <p class="text-secondary">
+              Built as an academic and portfolio demonstration for Rajalakshmi Engineering College, the system emphasizes safe user inputs, responsive layouts, data persistence via localStorage, and clear patient communication.
+            </p>
+
+            <div class="d-flex flex-column gap-3 mt-4">
+              <div class="d-flex align-items-center gap-3">
+                <div class="p-2 rounded bg-light text-primary fs-4"><i class="bi bi-geo-alt-fill"></i></div>
+                <div>
+                  <div class="fw-bold text-navy">Campus Health Center &bull; Clinical Outpatient Desk</div>
+                  <div class="text-muted small">Rajalakshmi Engineering College, Thandalam, Chennai - 602105</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <div class="p-2 rounded bg-light text-success fs-4"><i class="bi bi-telephone-fill"></i></div>
+                <div>
+                  <div class="fw-bold text-navy">Hospital Emergency Line: +91 91234 56789</div>
+                  <div class="text-muted small">General Inquiries: +91 98765 43210 &bull; Email: healthcare@hospital.com</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card p-4 p-md-5 border-0 shadow-lg rounded-4" style="background: linear-gradient(135deg, #0f2e59 0%, #0369a1 100%); color: white;">
+              <h3 class="fw-bold mb-3 text-white">Need Immediate Care?</h3>
+              <p class="text-light small mb-4">
+                Our emergency triage services operate 24 hours a day, 7 days a week. For standard non-emergency outpatient visits, please reserve an online slot in advance.
+              </p>
+              <div class="d-flex flex-column gap-2 mb-4">
+                <div class="d-flex justify-content-between border-bottom border-light border-opacity-25 pb-2 small">
+                  <span>General OPD</span>
+                  <span class="fw-bold">Mon - Sat: 8:00 AM - 8:00 PM</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom border-light border-opacity-25 pb-2 small">
+                  <span>Pediatrics &amp; Child Health</span>
+                  <span class="fw-bold">Mon - Sat: 9:00 AM - 3:00 PM</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom border-light border-opacity-25 pb-2 small">
+                  <span>Specialist Consultations</span>
+                  <span class="fw-bold">Scheduled Slots Only</span>
+                </div>
+                <div class="d-flex justify-content-between small">
+                  <span>Casualty / Emergency</span>
+                  <span class="fw-bold text-warning">24 / 7 Available</span>
+                </div>
+              </div>
+              <a href="doctors.html" class="btn btn-light fw-bold py-2 px-3 text-primary">
+                <i class="bi bi-search me-1"></i> Browse Available Doctors
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="brand-icon-box" style="width: 36px; height: 36px; font-size: 1.1rem;">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <span class="fw-bold fs-5 text-white">HealthCare Portal</span>
+          </div>
+          <p class="small text-secondary mb-3">
+            A comprehensive, patient-friendly outpatient appointment and doctor directory platform. Designed for accessible healthcare navigation.
+          </p>
+          <div class="d-flex align-items-center gap-2">
+            <img src="images/REC.png" alt="REC Logo" style="height: 28px; filter: brightness(0) invert(1);">
+            <span class="small text-muted">Rajalakshmi Engineering College</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="doctors.html">Doctor Directory</a></li>
+            <li><a href="appointment.html">Book Appointment</a></li>
+            <li><a href="javascript:void(0)" onclick="openMyAppointmentsModal()">My Bookings</a></li>
+            <li><a href="login.html">Demo Login</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <h5>Specialties</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li><a href="doctors.html?filter=Cardiology">Cardiology</a></li>
+            <li><a href="doctors.html?filter=General Medicine">General Medicine</a></li>
+            <li><a href="doctors.html?filter=Orthopedics">Orthopedics</a></li>
+            <li><a href="doctors.html?filter=Pediatrics">Pediatrics</a></li>
+            <li><a href="doctors.html?filter=Dermatology">Dermatology</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3">
+          <h5>Project Disclaimer</h5>
+          <p class="small text-secondary mb-2">
+            This application is created for demonstration, educational, and portfolio purposes. It uses client-side localStorage to simulate booking records without requiring an active backend server.
+          </p>
+          <div class="badge bg-secondary-subtle text-secondary border">Academic Demonstration Only</div>
+        </div>
+      </div>
+
+      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <p class="mb-0 text-muted small">&copy; 2026 HealthCare Appointment System &bull; All Rights Reserved.</p>
+        <div class="d-flex gap-3 small text-muted">
+          <span>HTML5 &bull; CSS3 &bull; JavaScript &bull; Bootstrap 5</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Master Application Logic -->
+  <script src="js/script.js"></script>
 </body>
 </html>
