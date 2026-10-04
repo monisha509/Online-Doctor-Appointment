@@ -41,3 +41,8 @@ Simply open `login.html` or `index.html` in any web browser.
 - `css/` - Custom styling, theme variables, and responsive layout sheets
 - `js/` - Frontend application logic, mock authentication, and data services
 - `server.js` - Express backend server and SQLite database adapter
+
+
+## Live Demo
+
+[Visit Online Doctor Appointment Website](https://monisha509.github.io/Online-Doctor-Appointment/)
